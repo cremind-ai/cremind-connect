@@ -1,0 +1,14 @@
+# Local development secrets for `wrangler dev`. Copy to `.dev.vars` (gitignored).
+# In production these are set with `wrangler secret put <NAME>` (see SETUP.md).
+
+# Required: HMAC key used to sign short-lived relay-session JWTs.
+RELAY_SIGNING_KEY="dev-only-change-me"
+
+# Optional: previous signing key, kept valid during a key rotation window.
+RELAY_SIGNING_KEY_PREV=""
+
+# Optional: if set AND CALENDAR_REQUIRE_HMAC=true, the Calendar channel token
+# must equal HMAC(this key, channelId). Otherwise calendar webhooks are accepted
+# on structural channel-id validation alone (a forged webhook only triggers a
+# harmless, authorized re-sync on the client).
+CALENDAR_WEBHOOK_HMAC_KEY=""

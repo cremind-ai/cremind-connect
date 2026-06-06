@@ -1,0 +1,31 @@
+name: Deploy
+
+# Deploys the relay to Cloudflare on pushes to main. Requires repo secret
+# CLOUDFLARE_API_TOKEN (Workers Scripts:Edit + Workers KV + Durable Objects).
+# KV namespace ids and Worker secrets are configured out-of-band (see SETUP.md).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Deploy
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

@@ -1,0 +1,5 @@
+project_id     = "cremind-connect-prod"
+region         = "us-central1"
+topic_name     = "gmail-watch"
+relay_push_url = "https://connect.cremind.io/ingress/google/pubsub"
+push_audience  = "https://connect.cremind.io/ingress/google/pubsub"
