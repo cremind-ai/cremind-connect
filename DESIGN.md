@@ -35,7 +35,7 @@ The local app's listener calls, with its **own** token:
   `gmail-api-push@system.gserviceaccount.com`; users need no GCP access). Google
   pushes `{emailAddress, historyId}` to `/ingress/google/pubsub` with a
   Google-signed OIDC JWT the relay verifies.
-- **Calendar** `events.watch({ address: <org webhook>, id: cm.<key>.<nonce> })`.
+- **Calendar** `events.watch({ address: <org webhook>, id: cm-<key>-<nonce> })`.
   Google POSTs header-only notifications to `/ingress/google/calendar`.
 
 The relay derives `routingKey = base32(sha256("google:" + lower(trim(email)))[:16])`,
@@ -57,16 +57,19 @@ listener), not the relay's — so the relay holds no per-user lifecycle state.
 | Refresh token | local app | yes (its own) | no |
 | Route events | relay | no (hash of email from payload) | derived, not stored |
 
-The relay's only secrets are the **relay-session signing key** and the **public**
-OAuth client id (plus an optional Calendar HMAC key). No access/refresh tokens,
-ever.
+The relay's only genuine secret is the **relay-session signing key** (plus an
+optional Calendar HMAC key). It also holds the **public** OAuth client id and
+client secret and serves both from `GET /credentials/google` — these are
+non-confidential for a Desktop OAuth client (Google treats the Desktop
+`client_secret` as public), and serving them lets the org rotate credentials
+without pushing a client update. No access/refresh tokens, ever.
 
 ## Routing & fan-out
 
 - DO name = `routingKey` (one hub per Google account), addressed deterministically
   via `idFromName` — no database.
 - Gmail: relay computes the key from the push's `emailAddress`.
-- Calendar: the app embeds the key in the channel id (`cm.<key>.<nonce>`, ≤64 chars);
+- Calendar: the app embeds the key in the channel id (`cm-<key>-<nonce>`, ≤64 chars);
   the relay parses it from `X-Goog-Channel-ID`. No stored channel→account mapping.
 - One hub multiplexes all resources for an account (gmail, calendar, future drive);
   the nudge carries `source` so the app syncs only the changed surface.
@@ -99,7 +102,7 @@ bounded recent resync — an app-side concern.)
   via cached JWKS, `iss`, exact `aud`, exact service-account `email`, `exp`).
 - **Forged Calendar webhook** (unsigned by Google) → low impact: it can at most
   trigger a redundant, *authorized* re-sync on the client (which always pulls with
-  its own token — no data leaks). Routing requires a structurally valid `cm.<key>`
+  its own token — no data leaks). Routing requires a structurally valid `cm-<key>`
   channel id; optional `CALENDAR_REQUIRE_HMAC` makes the channel token verifiable.
 - **ID-token replay** → single-use `nonce` stored in KV until `exp`; `aud` pinned
   to our client id; short relay-session TTL.

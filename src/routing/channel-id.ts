@@ -4,12 +4,15 @@ import { base32Encode } from "../lib/base32.ts";
  * Google Calendar watch channel ids encode the routing key so the relay can route
  * an inbound webhook to the right Durable Object hub WITHOUT any stored mapping.
  *
- * Format:  cm.<routingKey>.<nonce>
+ * Format:  cm-<routingKey>-<nonce>
  *   - "cm"        : fixed namespace tag (cremind)
  *   - routingKey  : 26-char base32 (from accountKeyFor)
  *   - nonce       : random per-channel suffix so re-watches get a fresh channel id
  *
- * Length budget: 3 ("cm.") + 26 + 1 (".") + nonce. Google caps channel id at 64
+ * Separators are "-" (NOT "."): Google Calendar restricts channel ids to
+ * [A-Za-z0-9-_+/=], so a dot is rejected at events.watch() with channelIdInvalid.
+ *
+ * Length budget: 3 ("cm-") + 26 + 1 ("-") + nonce. Google caps channel id at 64
  * chars, so the nonce can be up to 34 chars; we use 16.
  *
  * The client (cremind skill) builds the channel id with this exact format when it
@@ -19,7 +22,7 @@ const PREFIX = "cm";
 const NONCE_LEN = 16;
 export const MAX_CHANNEL_ID_LEN = 64;
 
-const CHANNEL_ID_RE = /^cm\.([a-z2-7]{26})\.([a-z2-7]{1,34})$/;
+const CHANNEL_ID_RE = /^cm-([a-z2-7]{26})-([a-z2-7]{1,34})$/;
 
 export function randomNonce(len: number = NONCE_LEN): string {
   const bytes = new Uint8Array(Math.ceil((len * 5) / 8));
@@ -28,7 +31,7 @@ export function randomNonce(len: number = NONCE_LEN): string {
 }
 
 export function buildCalendarChannelId(routingKey: string, nonce: string = randomNonce()): string {
-  const id = `${PREFIX}.${routingKey}.${nonce}`;
+  const id = `${PREFIX}-${routingKey}-${nonce}`;
   if (id.length > MAX_CHANNEL_ID_LEN) {
     throw new Error(`channel id exceeds ${MAX_CHANNEL_ID_LEN} chars: ${id.length}`);
   }
