@@ -30,6 +30,10 @@ export interface Env {
 
   // --- Secrets ---
   RELAY_SIGNING_KEY: string;
+  /** The org Desktop OAuth client secret. A "secret" only to keep it out of git;
+   *  it is non-confidential for a Desktop client and intentionally served
+   *  publicly via GET /credentials/google. */
+  GOOGLE_CLIENT_SECRET: string;
   RELAY_SIGNING_KEY_PREV?: string;
   CALENDAR_WEBHOOK_HMAC_KEY?: string;
 }

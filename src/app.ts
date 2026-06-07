@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import type { Env } from "./env.ts";
 import { healthz } from "./routes/healthz.ts";
 import { discovery } from "./routes/discovery.ts";
+import { credentials } from "./routes/credentials.ts";
 import { ingress } from "./routes/ingress.ts";
 import { subscribe } from "./routes/subscribe.ts";
 import { httpErrorResponse, HttpError } from "./lib/errors.ts";
@@ -12,6 +13,7 @@ export function createApp(): Hono<{ Bindings: Env }> {
 
   app.get("/healthz", healthz);
   app.get("/.well-known/cremind-connect", discovery);
+  app.get("/credentials/:provider", credentials);
   app.post("/ingress/:provider/:mechanism", ingress);
   app.get("/subscribe", subscribe);
 

@@ -32,10 +32,15 @@ click an OAuth consent.
 ## 2. GCP — Desktop OAuth client
 
 APIs & Services → **Credentials** → Create credentials → **OAuth client ID** →
-Application type **Desktop app**. Note the **client id** (and the
-non-confidential client secret). The client id goes into `GOOGLE_CLIENT_ID`
-(wrangler) and the discovery doc; the local Cremind skill uses it for loopback
-PKCE.
+Application type **Desktop app**. Note the **client id** and the
+non-confidential **client secret**. The client id goes into `GOOGLE_CLIENT_ID`
+(a public `var` in `wrangler.jsonc`); the client secret is set with `wrangler
+secret put GOOGLE_CLIENT_SECRET` (§6) — it is non-confidential for a Desktop
+client but kept out of git. The relay serves **both** from `GET
+/credentials/google`, and the local Cremind skill fetches them for the loopback
+PKCE flow. Because the skills load these dynamically, rotating the secret later
+is just another `wrangler secret put` (and the client id a one-line
+`wrangler.jsonc` change) — no client update needed.
 
 ## 3. GCP — Pub/Sub + IAM (Terraform)
 
@@ -77,6 +82,7 @@ Put the returned ids into `wrangler.jsonc` (`kv_namespaces[].id`).
 
 ```bash
 npx wrangler secret put RELAY_SIGNING_KEY            # e.g. `openssl rand -base64 48`
+npx wrangler secret put GOOGLE_CLIENT_SECRET         # Desktop client secret; served publicly via /credentials/google
 # optional:
 npx wrangler secret put RELAY_SIGNING_KEY_PREV       # during key rotation
 npx wrangler secret put CALENDAR_WEBHOOK_HMAC_KEY    # if CALENDAR_REQUIRE_HMAC=true

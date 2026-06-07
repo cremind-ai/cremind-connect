@@ -50,8 +50,9 @@ the event. See [DESIGN.md](DESIGN.md).
 **No.** The local app mints tokens directly with Google via loopback PKCE and
 keeps them on the user's machine. The relay only needs to (a) publish a discovery
 document and (b) verify and fan out Google's pushes — neither requires a user
-token. The only secrets the relay holds are its own relay-session signing key and
-the (public) OAuth client id. It is **stateless at rest**: routing keys are
+token. The only genuine secret the relay holds is its own relay-session signing
+key; it also carries the public OAuth client id and (non-confidential, Desktop)
+client secret and serves both from `/credentials/google`. It is **stateless at rest**: routing keys are
 derived from the event payload, subscriber connections are ephemeral, and missed
 nudges self-heal because offline apps re-sync on reconnect.
 
@@ -70,6 +71,7 @@ Endpoints:
 | Route | Purpose |
 |---|---|
 | `GET /.well-known/cremind-connect` | Discovery doc (client id, scopes, topic, webhook URL, ws URL). |
+| `GET /credentials/google` | Public OAuth client id + secret (served so the org can rotate them). |
 | `GET /subscribe?account=<key>` | WebSocket; Google ID token (bootstrap) or relay-session (reconnect). |
 | `POST /ingress/google/pubsub` | Gmail Pub/Sub push receiver (verifies OIDC JWT). |
 | `POST /ingress/google/calendar` | Calendar webhook receiver. |

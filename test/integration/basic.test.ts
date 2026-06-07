@@ -28,6 +28,23 @@ describe("basic routes", () => {
     expect(cal.webhookUrl).toBe("https://connect.test/ingress/google/calendar");
   });
 
+  it("GET /credentials/google returns the OAuth client id + secret", async () => {
+    const res = await SELF.fetch("https://connect.test/credentials/google");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("cache-control")).toBe("public, max-age=300");
+    expect(await res.json()).toMatchObject({
+      provider: "google",
+      clientId: "test-client.apps.googleusercontent.com",
+      clientSecret: "test-secret-do-not-use",
+    });
+  });
+
+  it("GET /credentials/<unknown> returns 404", async () => {
+    const res = await SELF.fetch("https://connect.test/credentials/microsoft");
+    expect(res.status).toBe(404);
+    expect(await res.json()).toMatchObject({ error: "unknown_provider" });
+  });
+
   it("unknown route returns 404", async () => {
     const res = await SELF.fetch("https://connect.test/nope");
     expect(res.status).toBe(404);

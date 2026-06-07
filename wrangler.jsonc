@@ -40,7 +40,8 @@
 		}
 	],
 	// Public, non-secret configuration. Secrets go via `wrangler secret put` (see SETUP.md):
-	//   RELAY_SIGNING_KEY, RELAY_SIGNING_KEY_PREV (optional), CALENDAR_WEBHOOK_HMAC_KEY (optional)
+	//   RELAY_SIGNING_KEY, RELAY_SIGNING_KEY_PREV (optional), CALENDAR_WEBHOOK_HMAC_KEY (optional),
+	//   GOOGLE_CLIENT_SECRET (non-confidential Desktop secret; kept out of git but served at /credentials/google)
 	"vars": {
 		"RELAY_VERSION": "0.1.0",
 		"PUBLIC_BASE_URL": "https://connect.cremind.io",

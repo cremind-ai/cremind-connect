@@ -10,6 +10,8 @@ export interface Config {
   wsUrl: string;
   google: {
     clientId: string;
+    /** The org Desktop OAuth client secret (non-confidential per Google; served publicly). */
+    clientSecret: string;
     scopes: string[];
     gmailPubsubTopic: string;
     /** Expected `aud` claim on the Pub/Sub push OIDC JWT. */
@@ -45,6 +47,7 @@ export function readConfig(env: Env): Config {
     wsUrl: env.RELAY_WS_URL ?? "wss://connect.cremind.io/subscribe",
     google: {
       clientId: env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
       scopes: (env.GOOGLE_SCOPES ?? "").split(/\s+/).filter(Boolean),
       gmailPubsubTopic: env.GMAIL_PUBSUB_TOPIC ?? "",
       pubsubAudience: env.PUBSUB_AUDIENCE ?? "",
