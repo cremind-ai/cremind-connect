@@ -152,7 +152,7 @@ export class AccountHub {
   }
 }
 
-const VALID_RESOURCES: ResourceId[] = ["gmail", "calendar"];
+const VALID_RESOURCES: ResourceId[] = ["gmail", "calendar", "jira", "confluence"];
 
 function sanitizeResources(input: unknown): ResourceId[] {
   if (!Array.isArray(input)) return [];

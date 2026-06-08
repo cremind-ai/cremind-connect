@@ -9,8 +9,10 @@ import { HttpError, httpErrorResponse } from "../lib/errors.ts";
 import { log } from "../lib/log.ts";
 
 function toIngressRequest(req: Request): IngressRequest {
+  const url = new URL(req.url);
   return {
     header: (name: string) => req.headers.get(name) ?? undefined,
+    query: (name: string) => url.searchParams.get(name) ?? undefined,
     json: () => req.clone().json(),
     text: () => req.clone().text(),
   };

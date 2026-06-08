@@ -14,7 +14,7 @@ import { base32Encode } from "../lib/base32.ts";
  * skills (shared golden vectors), or nudges route to the wrong hub and silently
  * never arrive.
  */
-export type Provider = "google";
+export type Provider = "google" | "atlassian";
 
 /**
  * Normalize an email for hashing.

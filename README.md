@@ -79,10 +79,13 @@ Endpoints:
 
 ## Deploy
 
-Requires a paid Cloudflare Workers plan (Durable Objects). See
-[SETUP.md](SETUP.md) for GCP (consent screen, Desktop OAuth client, Pub/Sub via
-[`terraform/`](terraform/), Calendar domain verification) and Cloudflare (KV
-namespaces, secrets, custom domain `connect.cremind.io`).
+Requires a paid Cloudflare Workers plan (Durable Objects). [SETUP.md](SETUP.md)
+covers the shared Cloudflare base (KV namespaces, relay signing key, custom domain
+`connect.cremind.io`, deploy); per-provider guides cover the rest:
+[SETUP-GCP.md](SETUP-GCP.md) (Google — consent screen, Desktop OAuth client,
+Pub/Sub via [`terraform/`](terraform/), Calendar domain verification) and
+[SETUP-ATLASSIAN.md](SETUP-ATLASSIAN.md) (Atlassian — OAuth 2.0 (3LO) app, scopes,
+callback URL).
 
 ## Extending to other providers
 

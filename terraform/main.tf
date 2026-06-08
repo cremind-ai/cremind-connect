@@ -7,7 +7,7 @@
 #
 # NOTE: the OAuth consent screen + "Desktop" OAuth client are created in the
 # Cloud Console (Terraform/gcloud cannot fully manage the consent screen). See
-# ../SETUP.md.
+# ../SETUP-GCP.md.
 
 data "google_project" "this" {
   project_id = var.project_id

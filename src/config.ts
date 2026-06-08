@@ -21,6 +21,14 @@ export interface Config {
     /** Expected `email` claim (the push subscription's service account). */
     pubsubServiceAccount: string;
   };
+  atlassian: {
+    /** The shared Atlassian OAuth 2.0 (3LO) app client id (public; in the discovery doc). */
+    clientId: string;
+    /** The Atlassian app client secret — CONFIDENTIAL; held server-side only, never served. */
+    clientSecret: string;
+    /** Per-resource OAuth scopes; each skill requests only its own (least privilege). */
+    resourceScopes: Partial<Record<ResourceId, string[]>>;
+  };
   sessionTtlSeconds: number;
   nonceWindowSeconds: number;
   calendar: {
@@ -57,6 +65,14 @@ export function readConfig(env: Env): Config {
       gmailPubsubTopic: env.GMAIL_PUBSUB_TOPIC ?? "",
       pubsubAudience: env.PUBSUB_AUDIENCE ?? "",
       pubsubServiceAccount: env.PUBSUB_SA_EMAIL ?? "",
+    },
+    atlassian: {
+      clientId: env.ATLASSIAN_CLIENT_ID ?? "",
+      clientSecret: env.ATLASSIAN_CLIENT_SECRET ?? "",
+      resourceScopes: {
+        jira: (env.ATLASSIAN_SCOPES_JIRA ?? "").split(/\s+/).filter(Boolean),
+        confluence: (env.ATLASSIAN_SCOPES_CONFLUENCE ?? "").split(/\s+/).filter(Boolean),
+      },
     },
     sessionTtlSeconds: int(env.SESSION_TTL_SECONDS, 3600),
     nonceWindowSeconds: int(env.NONCE_WINDOW_SECONDS, 600),

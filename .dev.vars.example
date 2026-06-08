@@ -1,12 +1,18 @@
 # Local development secrets for `wrangler dev`. Copy to `.dev.vars` (gitignored).
-# In production these are set with `wrangler secret put <NAME>` (see SETUP.md).
+# In production these are set with `wrangler secret put <NAME>` (see SETUP.md and
+# the per-provider guides SETUP-GCP.md / SETUP-ATLASSIAN.md).
 
-# Required: HMAC key used to sign short-lived relay-session JWTs.
+# Required (common): HMAC key used to sign short-lived relay-session JWTs.
 RELAY_SIGNING_KEY="dev-only-change-me"
 
-# The org's Desktop OAuth client secret. Non-confidential (it is served publicly
-# via GET /credentials/google); kept as a secret only so it stays out of git.
+# Google: the org's Desktop OAuth client secret. Non-confidential (it is served
+# publicly via GET /credentials/google); kept as a secret only so it stays out of git.
 GOOGLE_CLIENT_SECRET="dev-client-secret"
+
+# Atlassian: the 3LO app client secret. CONFIDENTIAL — held server-side only and
+# NEVER served to clients; used to mediate the token exchange/refresh and to verify
+# inbound Jira webhooks.
+ATLASSIAN_CLIENT_SECRET="dev-atlassian-secret"
 
 # Optional: previous signing key, kept valid during a key rotation window.
 RELAY_SIGNING_KEY_PREV=""

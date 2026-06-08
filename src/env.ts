@@ -29,6 +29,11 @@ export interface Env {
   SESSION_TTL_SECONDS: string;
   NONCE_WINDOW_SECONDS: string;
   CALENDAR_REQUIRE_HMAC: string;
+  /** Shared Atlassian OAuth 2.0 (3LO) app client id (public). */
+  ATLASSIAN_CLIENT_ID: string;
+  /** Per-resource Atlassian OAuth scopes (space-separated); each skill requests its own. */
+  ATLASSIAN_SCOPES_JIRA: string;
+  ATLASSIAN_SCOPES_CONFLUENCE: string;
 
   // --- Secrets ---
   RELAY_SIGNING_KEY: string;
@@ -38,4 +43,8 @@ export interface Env {
   GOOGLE_CLIENT_SECRET: string;
   RELAY_SIGNING_KEY_PREV?: string;
   CALENDAR_WEBHOOK_HMAC_KEY?: string;
+  /** The Atlassian app client secret — CONFIDENTIAL. Held server-side only; used to
+   *  mediate the 3LO token exchange/refresh and to verify inbound Jira webhooks.
+   *  NEVER served to clients (unlike GOOGLE_CLIENT_SECRET, which is a Desktop secret). */
+  ATLASSIAN_CLIENT_SECRET?: string;
 }

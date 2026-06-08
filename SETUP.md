@@ -1,105 +1,73 @@
 # Setup
 
-Two halves: **GCP** (OAuth consent + Desktop client + Pub/Sub) and **Cloudflare**
-(the Worker, KV, secrets, custom domain). End users do none of this — they only
-click an OAuth consent.
+cremind-connect is a token-less OAuth broker + event relay. Setup has two layers:
 
-## Prerequisites
+1. **This guide (common):** stand up the Worker on Cloudflare — KV namespaces, the
+   relay signing key, base vars, custom domain, deploy.
+2. **Per-provider guides:** enable each provider you need.
+   - **[SETUP-GCP.md](SETUP-GCP.md)** — Google (Gmail + Calendar): OAuth consent
+     screen, Desktop OAuth client, Pub/Sub, Calendar domain verification.
+   - **[SETUP-ATLASSIAN.md](SETUP-ATLASSIAN.md)** — Atlassian (Jira + Confluence):
+     the OAuth 2.0 (3LO) app, scopes, callback URL.
 
-- A GCP project (e.g. `cremind-connect-prod`).
+End users do none of this — they only click an OAuth consent.
+
+## Prerequisites (common)
+
 - A paid Cloudflare Workers plan (Durable Objects require it) on the account that
   manages `cremind.io`.
-- `gcloud`, `terraform`, and `npm` installed; `npx wrangler login` done.
+- `npm` installed; `npx wrangler login` done.
+- Provider-specific tools (`gcloud` + `terraform` for Google, an Atlassian account
+  for Atlassian) are listed in the per-provider guides.
 
 ---
 
-## 1. GCP — OAuth consent screen (Testing mode)
-
-1. Console → APIs & Services → **OAuth consent screen** → User type **External**.
-2. Publishing status: leave as **Testing**.
-3. Add **test users** (≤100) — only these accounts can link until you go to
-   production.
-4. Add scopes:
-   - `openid`, `.../auth/userinfo.email`
-   - `https://www.googleapis.com/auth/gmail.modify`
-   - `https://www.googleapis.com/auth/gmail.send`
-   - `https://www.googleapis.com/auth/calendar`
-
-> Going **public** later requires Google verification + an annual CASA security
-> assessment (because the client requests restricted Gmail scopes). The
-> token-less relay reduces blast radius but does not waive this.
-
-## 2. GCP — Desktop OAuth client
-
-APIs & Services → **Credentials** → Create credentials → **OAuth client ID** →
-Application type **Desktop app**. Note the **client id** and the
-non-confidential **client secret**. The client id goes into `GOOGLE_CLIENT_ID`
-(a public `var` in `wrangler.jsonc`); the client secret is set with `wrangler
-secret put GOOGLE_CLIENT_SECRET` (§6) — it is non-confidential for a Desktop
-client but kept out of git. The relay serves **both** from `GET
-/credentials/google`, and the local Cremind skill fetches them for the loopback
-PKCE flow. Because the skills load these dynamically, rotating the secret later
-is just another `wrangler secret put` (and the client id a one-line
-`wrangler.jsonc` change) — no client update needed.
-
-## 3. GCP — Pub/Sub + IAM (Terraform)
-
-```bash
-cd terraform
-cp terraform.tfvars.example terraform.tfvars   # edit project_id, urls
-terraform init
-terraform apply
-```
-
-This creates the topic, the `gmail-api-push@system` publisher binding, a push
-identity service account, and an **authenticated** push subscription →
-`https://connect.cremind.io/ingress/google/pubsub`. Copy the outputs into
-`wrangler.jsonc` vars:
-
-- `gmail_pubsub_topic`        → `GMAIL_PUBSUB_TOPIC`
-- `push_service_account_email`→ `PUBSUB_SA_EMAIL`
-- `push_audience`             → `PUBSUB_AUDIENCE`
-
-## 4. GCP — Calendar domain verification
-
-Calendar `events.watch()` only accepts a webhook on a verified domain. Verify
-`cremind.io` in [Google Search Console](https://search.google.com/search-console)
-and add it under APIs & Services → Domain verification. (DNS is on Cloudflare, so
-add the TXT record there.)
-
----
-
-## 5. Cloudflare — KV namespaces
+## 1. Cloudflare — KV namespaces
 
 ```bash
 npx wrangler kv namespace create JWKS_CACHE
 npx wrangler kv namespace create NONCE_SEEN
 ```
 
-Put the returned ids into `wrangler.jsonc` (`kv_namespaces[].id`).
+Put the returned ids into `wrangler.jsonc` (`kv_namespaces[].id`). These back the
+Google JWKS cache and ID-token replay protection; the Worker requires both
+bindings regardless of which providers you enable.
 
-## 6. Cloudflare — secrets
+## 2. Cloudflare — relay signing secret
 
 ```bash
 npx wrangler secret put RELAY_SIGNING_KEY            # e.g. `openssl rand -base64 48`
-npx wrangler secret put GOOGLE_CLIENT_SECRET         # Desktop client secret; served publicly via /credentials/google
-# optional:
-npx wrangler secret put RELAY_SIGNING_KEY_PREV       # during key rotation
-npx wrangler secret put CALENDAR_WEBHOOK_HMAC_KEY    # if CALENDAR_REQUIRE_HMAC=true
+# optional, during key rotation:
+npx wrangler secret put RELAY_SIGNING_KEY_PREV
 ```
 
-## 7. Cloudflare — vars + custom domain
+`RELAY_SIGNING_KEY` signs the short-lived relay-session JWTs that every provider's
+WebSocket subscription uses. Provider OAuth secrets are set in their own guides.
 
-In `wrangler.jsonc` set `GOOGLE_CLIENT_ID`, `GMAIL_PUBSUB_TOPIC`,
-`PUBSUB_AUDIENCE`, `PUBSUB_SA_EMAIL`, and confirm `PUBLIC_BASE_URL` /
-`RELAY_WS_URL` use `connect.cremind.io`. Attach the custom domain (uncomment the
-`routes` entry in `wrangler.jsonc`, or add it in the dashboard):
+## 3. Cloudflare — base vars + custom domain
+
+In `wrangler.jsonc` confirm `PUBLIC_BASE_URL` / `RELAY_WS_URL` use
+`connect.cremind.io`, then attach the custom domain (uncomment the `routes` entry
+in `wrangler.jsonc`, or add it in the dashboard):
 
 ```jsonc
 "routes": [{ "pattern": "connect.cremind.io", "custom_domain": true }]
 ```
 
-## 8. Deploy
+> `workers.dev` + preview URLs are disabled so the relay is reachable ONLY at its
+> canonical host (the OIDC audience the relay verifies is bound to it).
+
+Provider-specific vars (`GOOGLE_*`, `ATLASSIAN_*`) are set in their guides.
+
+## 4. Configure providers
+
+Follow the guide(s) for the providers you're enabling — each adds its OAuth
+app/credentials, its `wrangler.jsonc` vars, and its secrets:
+
+- **[SETUP-GCP.md](SETUP-GCP.md)** — Google (Gmail, Calendar)
+- **[SETUP-ATLASSIAN.md](SETUP-ATLASSIAN.md)** — Atlassian (Jira, Confluence)
+
+## 5. Deploy
 
 ```bash
 npm test
@@ -109,14 +77,17 @@ npx wrangler deploy
 Or push to `main` (the `Deploy` workflow runs `wrangler deploy` with the
 `CLOUDFLARE_API_TOKEN` repo secret).
 
----
+## 6. Smoke test (common)
 
-## 9. Smoke test (real account)
+```bash
+curl https://connect.cremind.io/.well-known/cremind-connect
+```
 
-1. `curl https://connect.cremind.io/.well-known/cremind-connect` → check the
-   discovery doc.
-2. With a test-user account's own token, call `users.watch()` against the topic.
-3. Connect a WebSocket client to `/subscribe` with that account's Google ID token;
-   expect a `hello` message.
-4. Send yourself an email → expect a `{"type":"resync","source":"gmail"}` nudge.
-5. Forge a Pub/Sub push (wrong/absent OIDC JWT) → expect `401/403`.
+Check the discovery doc returns the relay `wsUrl` and lists each provider you
+configured (with its `authClientId` and per-resource scopes). Per-provider event
+smoke tests are at the end of each provider guide.
+
+## Local development
+
+Copy `.dev.vars.example` → `.dev.vars` (gitignored), fill the secrets for the
+providers you're testing, then `npx wrangler dev`.

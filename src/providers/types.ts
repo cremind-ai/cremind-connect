@@ -6,8 +6,8 @@ import type { KeyResolver } from "../auth/jwks.ts";
  * adding GitHub/Microsoft/etc. later is a new module, not a change to routes or
  * the Durable Object.
  */
-export type ProviderId = "google";
-export type ResourceId = "gmail" | "calendar"; // future: "drive"
+export type ProviderId = "google" | "atlassian";
+export type ResourceId = "gmail" | "calendar" | "jira" | "confluence"; // future: "drive"
 
 /** The normalized result of verifying + parsing one inbound provider push. */
 export interface Notification {
@@ -26,6 +26,8 @@ export interface Notification {
 /** Minimal request view an ingress adapter needs (decouples adapters from Hono). */
 export interface IngressRequest {
   header(name: string): string | undefined;
+  /** A query-string parameter (e.g. the routing key carried by a Jira webhook url). */
+  query(name: string): string | undefined;
   json(): Promise<unknown>;
   text(): Promise<string>;
 }

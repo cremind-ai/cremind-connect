@@ -39,9 +39,11 @@
 			"remote": true
 		}
 	],
-	// Public, non-secret configuration. Secrets go via `wrangler secret put` (see SETUP.md):
+	// Public, non-secret configuration. Secrets go via `wrangler secret put`
+	// (see SETUP.md + the per-provider guides SETUP-GCP.md / SETUP-ATLASSIAN.md):
 	//   RELAY_SIGNING_KEY, RELAY_SIGNING_KEY_PREV (optional), CALENDAR_WEBHOOK_HMAC_KEY (optional),
-	//   GOOGLE_CLIENT_SECRET (non-confidential Desktop secret; kept out of git but served at /credentials/google)
+	//   GOOGLE_CLIENT_SECRET (non-confidential Desktop secret; kept out of git but served at /credentials/google),
+	//   ATLASSIAN_CLIENT_SECRET (CONFIDENTIAL Atlassian 3LO app secret; held server-side only, NEVER served)
 	"vars": {
 		"RELAY_VERSION": "0.1.0",
 		"PUBLIC_BASE_URL": "https://connect.cremind.io",
@@ -54,7 +56,10 @@
 		"PUBSUB_SA_EMAIL": "cremind-pubsub-push@cremind.iam.gserviceaccount.com",
 		"SESSION_TTL_SECONDS": "3600",
 		"NONCE_WINDOW_SECONDS": "600",
-		"CALENDAR_REQUIRE_HMAC": "false"
+		"CALENDAR_REQUIRE_HMAC": "false",
+		"ATLASSIAN_CLIENT_ID": "Q5jayQ7bOHd7ZbrGHiYtnNLpbrtxFx2k",
+		"ATLASSIAN_SCOPES_JIRA": "read:jira-work write:jira-work read:jira-user manage:jira-webhook read:me offline_access",
+		"ATLASSIAN_SCOPES_CONFLUENCE": "read:confluence-content.all write:confluence-content read:confluence-space.summary search:confluence read:me offline_access"
 	},
 	"observability": {
 		"enabled": true
