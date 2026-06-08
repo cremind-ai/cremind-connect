@@ -56,6 +56,8 @@ export interface Provider {
 
 export interface ResourceDiscovery {
   resource: ResourceId;
+  /** OAuth scopes the client skill for this resource must request (least privilege). */
+  scopes: string[];
   /** Gmail: the org Pub/Sub topic the client passes to users.watch(). */
   pubsubTopic?: string;
   /** Calendar: the webhook URL the client passes to events.watch().address. */
@@ -66,6 +68,5 @@ export interface ProviderDiscovery {
   provider: ProviderId;
   /** The org "Desktop" OAuth client id (public by design). */
   authClientId: string;
-  scopes: string[];
   resources: ResourceDiscovery[];
 }

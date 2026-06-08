@@ -20,7 +20,9 @@ export interface Env {
   PUBLIC_BASE_URL: string;
   RELAY_WS_URL: string;
   GOOGLE_CLIENT_ID: string;
-  GOOGLE_SCOPES: string;
+  /** Per-resource OAuth scopes (space-separated); each skill requests only its own. */
+  GOOGLE_SCOPES_GMAIL: string;
+  GOOGLE_SCOPES_CALENDAR: string;
   GMAIL_PUBSUB_TOPIC: string;
   PUBSUB_AUDIENCE: string;
   PUBSUB_SA_EMAIL: string;

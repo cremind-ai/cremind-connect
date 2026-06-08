@@ -1,4 +1,5 @@
 import type { Env } from "./env.ts";
+import type { ResourceId } from "./providers/types.ts";
 
 /**
  * A validated, typed snapshot of configuration derived from {@link Env}.
@@ -12,7 +13,8 @@ export interface Config {
     clientId: string;
     /** The org Desktop OAuth client secret (non-confidential per Google; served publicly). */
     clientSecret: string;
-    scopes: string[];
+    /** Per-resource OAuth scopes; each skill requests only its own (least privilege). */
+    resourceScopes: Partial<Record<ResourceId, string[]>>;
     gmailPubsubTopic: string;
     /** Expected `aud` claim on the Pub/Sub push OIDC JWT. */
     pubsubAudience: string;
@@ -48,7 +50,10 @@ export function readConfig(env: Env): Config {
     google: {
       clientId: env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
-      scopes: (env.GOOGLE_SCOPES ?? "").split(/\s+/).filter(Boolean),
+      resourceScopes: {
+        gmail: (env.GOOGLE_SCOPES_GMAIL ?? "").split(/\s+/).filter(Boolean),
+        calendar: (env.GOOGLE_SCOPES_CALENDAR ?? "").split(/\s+/).filter(Boolean),
+      },
       gmailPubsubTopic: env.GMAIL_PUBSUB_TOPIC ?? "",
       pubsubAudience: env.PUBSUB_AUDIENCE ?? "",
       pubsubServiceAccount: env.PUBSUB_SA_EMAIL ?? "",

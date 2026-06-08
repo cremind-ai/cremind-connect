@@ -16,16 +16,26 @@ describe("basic routes", () => {
       providers: {
         provider: string;
         authClientId: string;
-        resources: { resource: string; pubsubTopic?: string; webhookUrl?: string }[];
+        scopes?: string[];
+        resources: { resource: string; scopes: string[]; pubsubTopic?: string; webhookUrl?: string }[];
       }[];
     };
     expect(body.relay.wsUrl).toBe("wss://connect.test/subscribe");
     const google = body.providers.find((p) => p.provider === "google")!;
     expect(google.authClientId).toBe("test-client.apps.googleusercontent.com");
+    // Scopes are per-resource (least privilege) — no provider-level combined list.
+    expect(google.scopes).toBeUndefined();
     const gmail = google.resources.find((r) => r.resource === "gmail")!;
     expect(gmail.pubsubTopic).toBe("projects/test/topics/gmail-watch");
+    expect(gmail.scopes).toEqual([
+      "openid",
+      "email",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.send",
+    ]);
     const cal = google.resources.find((r) => r.resource === "calendar")!;
     expect(cal.webhookUrl).toBe("https://connect.test/ingress/google/calendar");
+    expect(cal.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/calendar"]);
   });
 
   it("GET /credentials/google returns the OAuth client id + secret", async () => {

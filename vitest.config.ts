@@ -19,6 +19,9 @@ export default defineWorkersConfig({
             CALENDAR_WEBHOOK_HMAC_KEY: "test-hmac-key",
             GOOGLE_CLIENT_ID: "test-client.apps.googleusercontent.com",
             GOOGLE_CLIENT_SECRET: "test-secret-do-not-use",
+            GOOGLE_SCOPES_GMAIL:
+              "openid email https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send",
+            GOOGLE_SCOPES_CALENDAR: "openid email https://www.googleapis.com/auth/calendar",
             PUBSUB_AUDIENCE: "https://connect.test/ingress/google/pubsub",
             PUBSUB_SA_EMAIL: "push@test.iam.gserviceaccount.com",
             GMAIL_PUBSUB_TOPIC: "projects/test/topics/gmail-watch",

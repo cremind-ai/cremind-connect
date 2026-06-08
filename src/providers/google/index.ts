@@ -13,10 +13,17 @@ export class GoogleProvider implements Provider {
     return {
       provider: "google",
       authClientId: config.google.clientId,
-      scopes: config.google.scopes,
       resources: [
-        { resource: "gmail", pubsubTopic: config.google.gmailPubsubTopic },
-        { resource: "calendar", webhookUrl: `${config.publicBaseUrl}/ingress/google/calendar` },
+        {
+          resource: "gmail",
+          scopes: config.google.resourceScopes.gmail ?? [],
+          pubsubTopic: config.google.gmailPubsubTopic,
+        },
+        {
+          resource: "calendar",
+          scopes: config.google.resourceScopes.calendar ?? [],
+          webhookUrl: `${config.publicBaseUrl}/ingress/google/calendar`,
+        },
       ],
     };
   }
