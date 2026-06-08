@@ -14,6 +14,15 @@ relay stores nothing.
 > end-of-support — so Confluence real-time events are deferred to a later **Forge**
 > app (Phase 2). Confluence is API-only today; poll via `search`/`pages`.
 
+> **⚠️ Jira event delivery requires Distribution (make the app public).** For a
+> _private_ OAuth 2.0 app, Atlassian delivers dynamic webhooks **only when the app
+> owner matches the user who registered them** — so a private app delivers nothing
+> to end-users who authorize it: registration still succeeds and the webhook lists
+> fine, but events are never queued (and `GET /rest/api/3/webhook/failed` stays
+> empty). In the Developer Console, set **Distribution → Sharing** to make the app
+> public — this does NOT require Marketplace/Atlassian approval (installers just see
+> an "unapproved app" notice). Without it, `jira` events silently never arrive.
+
 ## Prerequisites
 
 - An Atlassian Cloud site (e.g. `your-site.atlassian.net`) with Jira and/or
