@@ -18,7 +18,10 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "web:install": "npm ci --prefix web",
-    "web:build": "npm run build --prefix web"
+    "web:build": "npm run build --prefix web",
+    "ensure-web-out": "node -e \"require('fs').mkdirSync('web/out',{recursive:true})\"",
+    "pretest": "npm run ensure-web-out",
+    "pretest:watch": "npm run ensure-web-out"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.8.19",
