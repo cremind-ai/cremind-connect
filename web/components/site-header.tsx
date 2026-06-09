@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Menu, RadioTower } from "lucide-react";
+import { Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { GithubIcon } from "@/components/icons";
@@ -26,9 +27,14 @@ export function SiteHeader() {
           href="/"
           className="flex items-center gap-2 font-heading text-base font-semibold"
         >
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <RadioTower className="size-4" />
-          </span>
+          <Image
+            src="/logo.png"
+            alt="Cremind Connect logo"
+            width={32}
+            height={32}
+            priority
+            className="rounded-md"
+          />
           Cremind Connect
         </Link>
 

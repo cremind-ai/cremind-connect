@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { siteConfig } from "@/lib/site";
@@ -67,7 +68,14 @@ export function SiteFooter() {
     <footer className="border-t border-border/60">
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
         <div className="space-y-3">
-          <div className="font-heading text-base font-semibold">
+          <div className="flex items-center gap-2 font-heading text-base font-semibold">
+            <Image
+              src="/logo.png"
+              alt=""
+              width={24}
+              height={24}
+              className="rounded-md"
+            />
             {siteConfig.name}
           </div>
           <p className="max-w-xs text-sm text-muted-foreground">
