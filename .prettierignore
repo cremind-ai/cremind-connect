@@ -1,0 +1,5 @@
+# The web/ marketing site is a self-contained Next.js package with its own
+# formatting conventions; keep `npm run format` (Worker) from reformatting it.
+web/
+dist/
+.wrangler/

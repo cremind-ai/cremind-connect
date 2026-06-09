@@ -23,8 +23,15 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            web/package-lock.json
       - run: npm ci
       - run: npm test
+      # Build the static marketing site (web/out) before deploy so wrangler
+      # uploads it as Workers Static Assets alongside the Worker.
+      - run: npm ci --prefix web
+      - run: npm run web:build
       - name: Deploy
         run: npx wrangler deploy
         env:
