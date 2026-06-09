@@ -14,10 +14,18 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            web/package-lock.json
       - run: npm ci
       - name: Typecheck
         run: npm run typecheck
       - name: Test
         run: npm test
+      # Install + build the marketing site so PRs catch any Next.js/export
+      # breakage, and so the assets dir exists for the deploy dry-run below.
+      - run: npm ci --prefix web
+      - name: Web build
+        run: npm run web:build
       - name: Deploy dry-run (bundle check)
         run: npm run deploy:dry

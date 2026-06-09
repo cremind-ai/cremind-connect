@@ -12,10 +12,16 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "deploy:dry": "wrangler deploy --dry-run --outdir=dist",
+    "deploy:full": "npm run web:build && wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "web:install": "npm ci --prefix web",
+    "web:build": "npm run build --prefix web",
+    "ensure-web-out": "node -e \"require('fs').mkdirSync('web/out',{recursive:true})\"",
+    "pretest": "npm run ensure-web-out",
+    "pretest:watch": "npm run ensure-web-out"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.8.19",

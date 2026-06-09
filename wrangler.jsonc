@@ -5,6 +5,25 @@
 	"name": "cremind-connect",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-09-01",
+	// Static marketing site (Next.js export in ./web) served via Workers Static
+	// Assets. The API/WebSocket routes listed in run_worker_first ALWAYS invoke
+	// the Worker first and can never be shadowed by an asset; every other path
+	// (/, /contact, /privacy, /terms, /_next/*) is served asset-first. Unmatched
+	// paths fall through to the Worker's JSON 404 (not_found_handling: none).
+	// Build the assets first: `npm run web:build` (see package.json).
+	"assets": {
+		"directory": "./web/out",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "none",
+		"run_worker_first": [
+			"/healthz",
+			"/.well-known/*",
+			"/credentials/*",
+			"/ingress/*",
+			"/oauth/*",
+			"/subscribe"
+		]
+	},
 	// Durable Objects (require a paid Workers plan).
 	"durable_objects": {
 		"bindings": [
