@@ -55,19 +55,28 @@ token). Atlassian recommends classic scopes; keep the total under 50 per app.
 ## 3. Set the callback URL ⚠️
 
 Authorization settings → **Callback URL**. Atlassian allows exactly **one**, and it
-must match _exactly_ (scheme, host, port, path). Set it to the fixed-port loopback
-the Cremind backend listens on:
+must match _exactly_ (scheme, host, port, path). Cremind captures the consent
+redirect on the backend's own route, `…/api/oauth/atlassian/callback`, and advertises
+a **single fixed** redirect (the `CREMIND_ATLASSIAN_REDIRECT_URI` setting) — register
+that one URL. The default targets local + the documented Kubernetes port-forward
+(`kubectl port-forward svc/cremind 1515:80`):
 
 ```
-http://127.0.0.1:1516/
+http://localhost:1515/api/oauth/atlassian/callback
 ```
 
-`1516` is the default `CREMIND_OAUTH_CALLBACK_PORT` (the Docker desktop image sets
-`OAUTH_CALLBACK_PORT=1516`); the listener serves the root path on `127.0.0.1`. If
-you've overridden that env var, register that port instead. The port and trailing
-slash must match exactly. This fixed, pre-registered callback is why Atlassian
-linking **requires running under `cremind serve`** — there is no ephemeral-port
-loopback fallback like the Google skills have. Pin that port before registering.
+To register a different single URL — a native/Docker host, or an Ingress domain — set
+`CREMIND_ATLASSIAN_REDIRECT_URI` on the Cremind backend (Helm:
+`--set cremind.atlassianRedirectUri=https://<host>/api/oauth/atlassian/callback`) and
+register that exact value instead. Atlassian permits only one callback per app, so
+pick a single origin and keep every deployment on it.
+
+Because the redirect is captured by the always-running backend, Atlassian linking
+**requires running under `cremind serve`** — there is no ephemeral-port loopback
+fallback like the Google skills have. Where the consenting browser can't reach the
+registered URL (Ingress, or native/Docker reached on another port), finish linking
+with the agent's manual paste — `complete-link --response "<the URL the browser
+landed on>"` — which hands the captured code to the still-waiting `link`.
 
 ## 4. Cloudflare — Atlassian secret + vars
 
@@ -96,6 +105,8 @@ defaults). Then deploy per [SETUP.md → Deploy](SETUP.md#5-deploy).
    `atlassian` provider with `jira` + `confluence` resources and your `authClientId`.
 2. In a Cremind app (running under `cremind serve`), in the `jira` skill run
    `uv run scripts/__main__.py link`; open the printed consent URL and approve.
+   (On a remote/Kubernetes deploy where the redirect can't reach the backend,
+   finish with `complete-link --response "<the redirected URL>"` — see §3.)
 3. `uv run scripts/__main__.py status` → `linked: true` with your email + site url.
 4. `uv run scripts/__main__.py search --query "assignee = currentUser() ORDER BY updated DESC"`
    → issues returned.
