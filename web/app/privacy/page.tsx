@@ -8,18 +8,18 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Privacy",
   description:
-    "How Cremind Connect handles data: no OAuth tokens stored, no email, calendar, or issue content processed — only content-free resync nudges, routed by a one-way hash.",
+    "How Cremind handles data: the Google account data the app requests and why, and how the Cremind Connect relay stores no OAuth tokens and processes no email, calendar, or issue content — only content-free resync nudges, routed by a one-way hash.",
   alternates: { canonical: "/privacy" },
 };
 
-const EFFECTIVE_DATE = "June 9, 2026";
+const EFFECTIVE_DATE = "July 5, 2026";
 
 export default function PrivacyPage() {
   return (
     <>
       <PageHeader
         title="Privacy Policy"
-        description="How Cremind Connect handles data — and how little of it there is."
+        description="What Google data the Cremind app requests — and how little the relay handles."
         meta={
           <>
             Effective {EFFECTIVE_DATE} · Operator: {siteConfig.operator}
@@ -29,32 +29,80 @@ export default function PrivacyPage() {
       <Container className="py-14 sm:py-16">
         <Prose className="mx-auto max-w-3xl">
           <p>
-            This policy explains what data the Cremind Connect service and this
-            website do and do not handle. Cremind Connect is a token-less OAuth
-            broker and event relay for the open-source{" "}
-            <a href={siteConfig.links.cremind} target="_blank" rel="noreferrer">
-              Cremind
-            </a>{" "}
-            assistant. Its source code is{" "}
+            This policy explains what data the Cremind app, the Cremind Connect
+            service, and this website do and do not handle. Cremind is an
+            open-source, self-hosted assistant that runs on your own machine;
+            Cremind Connect is its token-less OAuth broker and event relay. Both
+            are{" "}
             <a
               href={siteConfig.links.connectRepo}
               target="_blank"
               rel="noreferrer"
             >
-              public
+              open source
             </a>{" "}
-            and can be audited at any time.
+            and can be audited at any time. Learn more about{" "}
+            <a href={siteConfig.links.cremind} target="_blank" rel="noreferrer">
+              Cremind
+            </a>
+            .
           </p>
 
           <h2>1. Scope</h2>
           <p>
-            This policy covers two distinct things, described separately below:
-            (a) the <strong>Cremind Connect relay service</strong> at{" "}
-            <code>connect.cremind.io</code>, and (b) this{" "}
+            This policy covers three distinct things, described separately below:
+            (a) the <strong>Google account data the Cremind app requests</strong>{" "}
+            through OAuth, (b) the{" "}
+            <strong>Cremind Connect relay service</strong> at{" "}
+            <code>connect.cremind.io</code>, and (c) this{" "}
             <strong>marketing website</strong>.
           </p>
 
-          <h2>2. The relay service — what it does not do</h2>
+          <h2>2. The Cremind app — Google account data it requests</h2>
+          <p>
+            Cremind runs on your own machine. When you connect a Google account,
+            the app requests these OAuth scopes:
+          </p>
+          <ul>
+            <li>
+              <code>userinfo.profile</code> — your{" "}
+              <strong>basic profile</strong> (name, profile picture). Used to
+              confirm which Google account you connected and to label that account
+              inside the app.
+            </li>
+            <li>
+              <code>openid</code>, <code>userinfo.email</code> — your{" "}
+              <strong>email and sign-in identity</strong>. Used to identify the
+              account you linked and to derive the one-way routing key that
+              delivers content-free real-time event nudges to your session.
+            </li>
+          </ul>
+          <p>
+            Sign-in uses a loopback + PKCE flow directly between your device and
+            Google. Your access and refresh tokens are stored{" "}
+            <strong>only on your own machine</strong>; for Google, Cremind Connect
+            is never in the token path.
+          </p>
+          <p>
+            <strong>Limited Use.</strong> Cremind&rsquo;s use of information
+            received from Google APIs adheres to the{" "}
+            <a
+              href="https://developers.google.com/terms/api-services-user-data-policy"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Google API Services User Data Policy
+            </a>
+            , including the Limited Use requirements. Specifically, this data is
+            used only to provide the features you enable; it is{" "}
+            <strong>not</strong> transferred to others except as necessary to
+            provide those features, to comply with applicable law, or as part of a
+            merger or acquisition; it is <strong>not</strong> used for advertising;
+            and no humans read it except with your consent, for security purposes,
+            or to comply with applicable law.
+          </p>
+
+          <h2>3. The relay service — what it does not do</h2>
           <ul>
             <li>
               It does <strong>not</strong> store your OAuth access or refresh
@@ -70,7 +118,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2>3. The relay service — what it does handle</h2>
+          <h2>4. The relay service — what it does handle</h2>
           <ul>
             <li>
               <strong>Verifying provider push notifications.</strong> When Google
@@ -103,7 +151,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2>4. Data at rest</h2>
+          <h2>5. Data at rest</h2>
           <p>
             The service is stateless at rest. The only persisted data is in a
             temporary key-value cache holding (i) Google&rsquo;s{" "}
@@ -113,7 +161,7 @@ export default function PrivacyPage() {
             connections are ephemeral and hold no durable state.
           </p>
 
-          <h2>5. Logs</h2>
+          <h2>6. Logs</h2>
           <p>
             Operational logs are deliberately scrubbed: email addresses, mailbox
             cursors, and all tokens are <strong>never</strong> logged. Only a
@@ -131,7 +179,7 @@ export default function PrivacyPage() {
             .
           </p>
 
-          <h2>6. This website</h2>
+          <h2>7. This website</h2>
           <p>
             This site is a static informational site. It uses{" "}
             <strong>Cloudflare Web Analytics</strong>, which is cookieless,
@@ -141,20 +189,20 @@ export default function PrivacyPage() {
             Cloudflare.
           </p>
 
-          <h2>7. Third parties</h2>
+          <h2>8. Third parties</h2>
           <p>
             The relay interacts with Google and Atlassian solely to verify pushes
             and (for Atlassian) exchange tokens. It shares no data with any other
             third party and does not sell data.
           </p>
 
-          <h2>8. Children</h2>
+          <h2>9. Children</h2>
           <p>
             Cremind Connect is not directed to children under 13, and we do not
             knowingly collect personal information from them.
           </p>
 
-          <h2>9. Your choices</h2>
+          <h2>10. Your choices</h2>
           <p>
             The service holds no account or stored personal data to access,
             export, or delete. To stop using it, unlink the integration in your
@@ -162,13 +210,13 @@ export default function PrivacyPage() {
             Atlassian account settings.
           </p>
 
-          <h2>10. Changes</h2>
+          <h2>11. Changes</h2>
           <p>
             We may update this policy. Material changes will be reflected by a new
             effective date on this page and in the public repository.
           </p>
 
-          <h2>11. Contact</h2>
+          <h2>12. Contact</h2>
           <p>
             Questions about this policy? Email{" "}
             <a href={`mailto:${siteConfig.contactEmail}`}>
