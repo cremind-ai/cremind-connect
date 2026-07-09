@@ -2,6 +2,7 @@ import type { IngressAdapter, Provider } from "./types.ts";
 import { GoogleProvider } from "./google/index.ts";
 import { GooglePubSubIngress } from "./google/pubsub-ingress.ts";
 import { GoogleWebhookIngress } from "./google/webhook-ingress.ts";
+import { GoogleDriveIngress } from "./google/drive-ingress.ts";
 import { AtlassianProvider } from "./atlassian/index.ts";
 import { JiraWebhookIngress } from "./atlassian/jira-ingress.ts";
 
@@ -15,6 +16,7 @@ const PROVIDERS: Provider[] = [new GoogleProvider(), new AtlassianProvider()];
 const INGRESS: Record<string, IngressAdapter> = {
   "google/pubsub": new GooglePubSubIngress(),
   "google/calendar": new GoogleWebhookIngress(),
+  "google/drive": new GoogleDriveIngress(),
   "atlassian/jira": new JiraWebhookIngress(),
 };
 

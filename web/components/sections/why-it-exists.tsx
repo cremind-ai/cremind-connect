@@ -12,7 +12,7 @@ const pieces = [
   {
     icon: Globe,
     title: "A verified webhook domain",
-    body: "Google Calendar push requires a verified HTTPS domain to receive change notifications — not something an individual registers ad hoc.",
+    body: "Google Calendar and Drive push require a verified HTTPS domain to receive change notifications — not something an individual registers ad hoc.",
   },
   {
     icon: ShieldCheck,

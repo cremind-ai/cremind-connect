@@ -12,7 +12,7 @@ const faqs = [
     a: "No. For Google it never even sees your tokens — your app authenticates directly with Google. For Atlassian's confidential flow it briefly relays the token exchange in memory and then discards it. Either way, nothing is stored.",
   },
   {
-    q: "Can it read my emails, calendar, or issues?",
+    q: "Can it read my emails, calendar, files, or issues?",
     a: "No. It only relays a content-free “resync” nudge that says something changed. Your own app then fetches the actual data directly from the provider using its own token.",
   },
   {

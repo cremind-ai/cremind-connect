@@ -1,4 +1,12 @@
-import { CalendarDays, FileText, Mail, SquareKanban } from "lucide-react";
+import {
+  CalendarDays,
+  FileSpreadsheet,
+  FileText,
+  FileType,
+  HardDrive,
+  Mail,
+  SquareKanban,
+} from "lucide-react";
 
 import { Container } from "@/components/container";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +34,30 @@ const providers = [
     body: "Live event changes via webhook.",
     status: "Real-time",
     live: true,
+  },
+  {
+    icon: HardDrive,
+    name: "Google Drive",
+    vendor: "Google",
+    body: "Live file changes via changes.watch webhook.",
+    status: "Real-time",
+    live: true,
+  },
+  {
+    icon: FileSpreadsheet,
+    name: "Google Sheets",
+    vendor: "Google",
+    body: "Read/write via OAuth; file events via Drive.",
+    status: "Execution-only",
+    live: false,
+  },
+  {
+    icon: FileType,
+    name: "Google Docs",
+    vendor: "Google",
+    body: "Read/write via OAuth; file events via Drive.",
+    status: "Execution-only",
+    live: false,
   },
   {
     icon: SquareKanban,

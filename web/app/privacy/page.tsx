@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Privacy",
   description:
-    "How Cremind handles data: the Google account data the app requests and why, and how the Cremind Connect relay stores no OAuth tokens and processes no email, calendar, or issue content — only content-free resync nudges, routed by a one-way hash.",
+    "How Cremind handles data: the Google account data the app requests and why, and how the Cremind Connect relay stores no OAuth tokens and processes no email, calendar, file, or issue content — only content-free resync nudges, routed by a one-way hash.",
   alternates: { canonical: "/privacy" },
 };
 
@@ -78,6 +78,32 @@ export default function PrivacyPage() {
             </li>
           </ul>
           <p>
+            To provide the features you enable, the app also requests scopes for
+            the Google Workspace services you use — each accessed only on your own
+            device, at your request or through automations you configure:
+          </p>
+          <ul>
+            <li>
+              <strong>Gmail</strong> (<code>gmail.modify</code>,{" "}
+              <code>gmail.send</code>) — read, search, label, and trash messages,
+              and send the emails and replies you compose or approve.
+            </li>
+            <li>
+              <strong>Calendar</strong> (<code>calendar.events</code>) — create,
+              view, update, and delete your own calendar events.
+            </li>
+            <li>
+              <strong>Drive</strong> (<code>drive</code>) — search, read/download,
+              upload, and organize (move, rename, folder, trash/restore) your
+              files.
+            </li>
+            <li>
+              <strong>Docs &amp; Sheets</strong> (<code>documents</code>,{" "}
+              <code>spreadsheets</code>) — create and read/edit the documents and
+              spreadsheets you name.
+            </li>
+          </ul>
+          <p>
             Sign-in uses a loopback + PKCE flow directly between your device and
             Google. Your access and refresh tokens are stored{" "}
             <strong>only on your own machine</strong>; for Google, Cremind Connect
@@ -110,7 +136,8 @@ export default function PrivacyPage() {
             </li>
             <li>
               It does <strong>not</strong> read, receive, store, or process the{" "}
-              <em>contents</em> of your email, calendar, or Jira/Confluence items.
+              <em>contents</em> of your email, calendar, Drive files, or
+              Jira/Confluence items.
             </li>
             <li>
               It does <strong>not</strong> maintain user accounts, profiles, or a

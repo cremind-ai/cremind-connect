@@ -8,7 +8,7 @@ export const siteConfig = {
   // Short value-prop used in <title> and hero.
   tagline: "Real-time events for your self-hosted AI assistant",
   description:
-    "Cremind Connect delivers real-time Gmail, Calendar, and Jira events to your local Cremind app — without ever storing your OAuth tokens or your data.",
+    "Cremind Connect delivers real-time Gmail, Calendar, Drive, and Jira events to your local Cremind app — without ever storing your OAuth tokens or your data.",
   url: "https://connect.cremind.io",
   host: "connect.cremind.io",
 

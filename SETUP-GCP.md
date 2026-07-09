@@ -1,13 +1,22 @@
-# Setup — GCP (Google: Gmail + Calendar)
+# Setup — GCP (Google: Gmail, Calendar, Drive, Sheets, Docs)
 
 Provider guide for Google. Do the common Cloudflare base in **[SETUP.md](SETUP.md)**
 first. This covers the GCP OAuth consent screen, Desktop OAuth client, Pub/Sub, and
-Calendar domain verification, plus the Google-specific Cloudflare vars/secrets.
+Calendar/Drive domain verification, plus the Google-specific Cloudflare vars/secrets.
 
 ## Prerequisites
 
 - A GCP project (e.g. `cremind-connect-prod`).
 - `gcloud` and `terraform` installed.
+
+## 0. Enable the Google APIs
+
+```bash
+gcloud services enable \
+  gmail.googleapis.com calendar-json.googleapis.com \
+  drive.googleapis.com sheets.googleapis.com docs.googleapis.com \
+  pubsub.googleapis.com --project <project-id>
+```
 
 ---
 
@@ -17,15 +26,20 @@ Calendar domain verification, plus the Google-specific Cloudflare vars/secrets.
 2. Publishing status: leave as **Testing**.
 3. Add **test users** (≤100) — only these accounts can link until you go to
    production.
-4. Add scopes:
+4. Add scopes (Console-only — the OAuth consent screen has **no** gcloud/API
+   surface, so this step must be done in the web Console):
    - `openid`, `.../auth/userinfo.email`
    - `https://www.googleapis.com/auth/gmail.modify`
    - `https://www.googleapis.com/auth/gmail.send`
-   - `https://www.googleapis.com/auth/calendar`
+   - `https://www.googleapis.com/auth/calendar.events`
+   - `https://www.googleapis.com/auth/drive`
+   - `https://www.googleapis.com/auth/spreadsheets`
+   - `https://www.googleapis.com/auth/documents`
 
 > Going **public** later requires Google verification + an annual CASA security
-> assessment (because the client requests restricted Gmail scopes). The
-> token-less relay reduces blast radius but does not waive this.
+> assessment (because the client requests restricted `gmail.modify` and `drive`
+> scopes). The token-less relay reduces blast radius but does not waive this.
+> `spreadsheets` and `documents` are *sensitive* (verification, no CASA).
 
 ## 2. Desktop OAuth client
 
@@ -58,12 +72,14 @@ identity service account, and an **authenticated** push subscription →
 - `push_service_account_email`→ `PUBSUB_SA_EMAIL`
 - `push_audience` → `PUBSUB_AUDIENCE`
 
-## 4. Calendar domain verification
+## 4. Calendar/Drive domain verification
 
-Calendar `events.watch()` only accepts a webhook on a verified domain. Verify
-`cremind.io` in [Google Search Console](https://search.google.com/search-console)
-and add it under APIs & Services → Domain verification. (DNS is on Cloudflare, so
-add the TXT record there.)
+Calendar `events.watch()` and Drive `changes.watch()` only accept a webhook on a
+verified domain. Verify `cremind.io` in
+[Google Search Console](https://search.google.com/search-console) and add it
+under APIs & Services → Domain verification. (DNS is on Cloudflare, so add the
+TXT record there.) Both push mechanisms POST to the same `cremind.io` host, so a
+single verification covers Calendar and Drive.
 
 ---
 
@@ -78,8 +94,14 @@ npx wrangler secret put CALENDAR_WEBHOOK_HMAC_KEY    # if CALENDAR_REQUIRE_HMAC=
 ## 6. Cloudflare — Google vars
 
 In `wrangler.jsonc` set `GOOGLE_CLIENT_ID`, `GMAIL_PUBSUB_TOPIC`,
-`PUBSUB_AUDIENCE`, `PUBSUB_SA_EMAIL`, and the scope vars `GOOGLE_SCOPES_GMAIL` /
-`GOOGLE_SCOPES_CALENDAR`.
+`PUBSUB_AUDIENCE`, `PUBSUB_SA_EMAIL`, and the scope vars `GOOGLE_SCOPES_GMAIL`,
+`GOOGLE_SCOPES_CALENDAR`, `GOOGLE_SCOPES_DRIVE`, `GOOGLE_SCOPES_SHEETS`,
+`GOOGLE_SCOPES_DOCS`.
+
+Drive push reuses the Calendar `web_hook` channel pipeline (`/ingress/google/drive`)
+and the same optional `CALENDAR_REQUIRE_HMAC` / `CALENDAR_WEBHOOK_HMAC_KEY` knob —
+**no Terraform change** (Drive watch is a plain webhook, not Pub/Sub). Sheets and
+Docs are poll-only (no push API), so they register scopes but no ingress.
 
 Then deploy per [SETUP.md → Deploy](SETUP.md#5-deploy).
 

@@ -23,6 +23,9 @@ export interface Env {
   /** Per-resource OAuth scopes (space-separated); each skill requests only its own. */
   GOOGLE_SCOPES_GMAIL: string;
   GOOGLE_SCOPES_CALENDAR: string;
+  GOOGLE_SCOPES_DRIVE: string;
+  GOOGLE_SCOPES_SHEETS: string;
+  GOOGLE_SCOPES_DOCS: string;
   GMAIL_PUBSUB_TOPIC: string;
   PUBSUB_AUDIENCE: string;
   PUBSUB_SA_EMAIL: string;

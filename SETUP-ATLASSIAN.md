@@ -56,18 +56,24 @@ token). Atlassian recommends classic scopes; keep the total under 50 per app.
 
 Authorization settings → **Callback URL**. Atlassian allows exactly **one**, and it
 must match _exactly_ (scheme, host, port, path). Cremind captures the consent
-redirect on the backend's own route, `…/api/oauth/atlassian/callback`, and advertises
+redirect on the backend's own route, `…/api/oauth/callback`, and advertises
 a **single fixed** redirect (the `CREMIND_ATLASSIAN_REDIRECT_URI` setting) — register
 that one URL. The default targets local + the documented Kubernetes port-forward
 (`kubectl port-forward svc/cremind 1515:80`):
 
 ```
-http://localhost:1515/api/oauth/atlassian/callback
+http://localhost:1515/api/oauth/callback
 ```
+
+> **Upgrading?** Earlier Cremind builds used `…/api/oauth/atlassian/callback`. The
+> callback path is now the unified `…/api/oauth/callback` (shared with the Google
+> skills), so update the Callback URL in the developer console to match — Atlassian
+> rejects the authorize request if it doesn't. Already-linked accounts keep working;
+> only new links / re-auth are affected.
 
 To register a different single URL — a native/Docker host, or an Ingress domain — set
 `CREMIND_ATLASSIAN_REDIRECT_URI` on the Cremind backend (Helm:
-`--set cremind.atlassianRedirectUri=https://<host>/api/oauth/atlassian/callback`) and
+`--set cremind.atlassianRedirectUri=https://<host>/api/oauth/callback`) and
 register that exact value instead. Atlassian permits only one callback per app, so
 pick a single origin and keep every deployment on it.
 
