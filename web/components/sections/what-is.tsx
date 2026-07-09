@@ -23,7 +23,8 @@ export function WhatIs() {
               your own machine. Cremind Connect is its companion relay: it owns
               the small amount of cloud infrastructure that Google and Atlassian
               require for real-time push, so your local assistant can react to new
-              email, calendar changes, and Jira updates the moment they happen.
+              email, calendar and Drive changes, and Jira updates the moment they
+              happen.
             </p>
             <p>
               It is the backend that powers Cremind&rsquo;s Google and Atlassian{" "}
