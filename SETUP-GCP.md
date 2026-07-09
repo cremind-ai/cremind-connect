@@ -21,7 +21,7 @@ Calendar domain verification, plus the Google-specific Cloudflare vars/secrets.
    - `openid`, `.../auth/userinfo.email`
    - `https://www.googleapis.com/auth/gmail.modify`
    - `https://www.googleapis.com/auth/gmail.send`
-   - `https://www.googleapis.com/auth/calendar`
+   - `https://www.googleapis.com/auth/calendar.events`
 
 > Going **public** later requires Google verification + an annual CASA security
 > assessment (because the client requests restricted Gmail scopes). The

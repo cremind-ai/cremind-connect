@@ -35,7 +35,7 @@ describe("basic routes", () => {
     ]);
     const cal = google.resources.find((r) => r.resource === "calendar")!;
     expect(cal.webhookUrl).toBe("https://connect.test/ingress/google/calendar");
-    expect(cal.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/calendar"]);
+    expect(cal.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/calendar.events"]);
   });
 
   it("GET /credentials/google returns the OAuth client id + secret", async () => {
