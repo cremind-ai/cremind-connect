@@ -71,7 +71,7 @@ without pushing a client update. No access/refresh tokens, ever.
 - Gmail: relay computes the key from the push's `emailAddress`.
 - Calendar: the app embeds the key in the channel id (`cm-<key>-<nonce>`, ≤64 chars);
   the relay parses it from `X-Goog-Channel-ID`. No stored channel→account mapping.
-- One hub multiplexes all resources for an account (gmail, calendar, future drive);
+- One hub multiplexes all resources for an account (gmail, calendar, drive);
   the nudge carries `source` so the app syncs only the changed surface.
 - 128-bit truncated hash → collision probability ≈ 1.5e-27 at 1e6 accounts.
 
@@ -134,8 +134,11 @@ Logging uses a field allowlist (`src/lib/log.ts`): only the derived `routingKey`
 Adding a provider = a module under `src/providers/<id>/` + entries in
 `src/providers/registry.ts`. Routes and the Durable Object are provider-agnostic.
 Poll-only resources (Contacts/Sheets/Docs — no push API) simply register no
-ingress adapter; those skills poll client-side and use the relay only for OAuth
-discovery.
+ingress adapter (their skills are execution-only; file-level changes to Sheets/
+Docs surface via the Drive resource's changes.watch feed). Drive itself is push:
+it reuses the Calendar `web_hook` channel pipeline (`/ingress/google/drive`,
+shared channel-id parser and HMAC knob), so it was a new ingress adapter, not new
+infrastructure.
 
 ## Operational notes
 

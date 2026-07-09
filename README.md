@@ -1,7 +1,7 @@
 # cremind-connect
 
 A **token-less OAuth broker + event relay** for [Cremind](https://github.com/cremind-ai).
-It lets a user's local Cremind app link Google accounts (Gmail, Calendar, …) and
+It lets a user's local Cremind app link Google accounts (Gmail, Calendar, Drive, …) and
 receive live events — **without this service ever storing, or even seeing, an
 OAuth access or refresh token**.
 
@@ -75,6 +75,7 @@ Endpoints:
 | `GET /subscribe?account=<key>` | WebSocket; Google ID token (bootstrap) or relay-session (reconnect). |
 | `POST /ingress/google/pubsub` | Gmail Pub/Sub push receiver (verifies OIDC JWT). |
 | `POST /ingress/google/calendar` | Calendar webhook receiver. |
+| `POST /ingress/google/drive` | Drive changes.watch webhook receiver. |
 | `GET /healthz` | Liveness. |
 
 ## Deploy
