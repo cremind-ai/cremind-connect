@@ -92,7 +92,7 @@ export default function TermsPage() {
           <h2>7. A relay, not a processor of your content</h2>
           <p>
             Cremind Connect does not process the contents of your email, calendar,
-            or issues. It verifies provider pushes and broadcasts content-free
+            files, or issues. It verifies provider pushes and broadcasts content-free
             nudges; your app retrieves any actual data itself.
           </p>
 

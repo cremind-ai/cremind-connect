@@ -14,7 +14,7 @@ const steps = [
     n: "01",
     icon: ShieldCheck,
     title: "Verify",
-    body: "A provider — Gmail via Pub/Sub, Calendar or Jira via webhook — pushes a notification to Cremind Connect, which cryptographically verifies it really came from the provider.",
+    body: "A provider — Gmail via Pub/Sub, Calendar, Drive, or Jira via webhook — pushes a notification to Cremind Connect, which cryptographically verifies it really came from the provider.",
   },
   {
     n: "02",
@@ -26,7 +26,7 @@ const steps = [
     n: "03",
     icon: RadioTower,
     title: "Nudge",
-    body: "It broadcasts a single content-free message over WebSocket to every app that proved control of that account. No email, calendar, or issue data is ever inside it.",
+    body: "It broadcasts a single content-free message over WebSocket to every app that proved control of that account. No email, calendar, file, or issue data is ever inside it.",
   },
 ];
 
