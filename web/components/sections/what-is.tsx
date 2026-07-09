@@ -29,6 +29,9 @@ export function WhatIs() {
               It is the backend that powers Cremind&rsquo;s Google and Atlassian{" "}
               <strong className="font-medium text-foreground">Agent Skills</strong>{" "}
               — and it is built so that infrastructure never holds your data.
+              Cremind Connect is operated by the Cremind project as the official
+              backend for these integrations — the same Cremind you approve on the
+              Google sign-in screen.
             </p>
           </div>
         </div>

@@ -30,6 +30,7 @@ export const siteConfig = {
   // Primary navigation (logo links home separately).
   nav: [
     { title: "How it works", href: "/#how" },
+    { title: "Data access", href: "/#data" },
     { title: "Privacy", href: "/privacy" },
     { title: "Terms", href: "/terms" },
     { title: "Contact", href: "/contact" },
