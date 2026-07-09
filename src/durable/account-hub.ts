@@ -152,7 +152,10 @@ export class AccountHub {
   }
 }
 
-const VALID_RESOURCES: ResourceId[] = ["gmail", "calendar", "jira", "confluence"];
+// "drive" is included because the Drive listener subscribes to it. Sheets/docs
+// are intentionally absent: they are poll-only, have no ingress, and never
+// subscribe — listing them would permit subscriptions to nudges that can't fire.
+const VALID_RESOURCES: ResourceId[] = ["gmail", "calendar", "drive", "jira", "confluence"];
 
 function sanitizeResources(input: unknown): ResourceId[] {
   if (!Array.isArray(input)) return [];

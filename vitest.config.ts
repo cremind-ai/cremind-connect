@@ -22,6 +22,9 @@ export default defineWorkersConfig({
             GOOGLE_SCOPES_GMAIL:
               "openid email https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send",
             GOOGLE_SCOPES_CALENDAR: "openid email https://www.googleapis.com/auth/calendar.events",
+            GOOGLE_SCOPES_DRIVE: "openid email https://www.googleapis.com/auth/drive",
+            GOOGLE_SCOPES_SHEETS: "openid email https://www.googleapis.com/auth/spreadsheets",
+            GOOGLE_SCOPES_DOCS: "openid email https://www.googleapis.com/auth/documents",
             PUBSUB_AUDIENCE: "https://connect.test/ingress/google/pubsub",
             PUBSUB_SA_EMAIL: "push@test.iam.gserviceaccount.com",
             GMAIL_PUBSUB_TOPIC: "projects/test/topics/gmail-watch",

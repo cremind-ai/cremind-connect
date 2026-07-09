@@ -36,6 +36,18 @@ describe("basic routes", () => {
     const cal = google.resources.find((r) => r.resource === "calendar")!;
     expect(cal.webhookUrl).toBe("https://connect.test/ingress/google/calendar");
     expect(cal.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/calendar.events"]);
+    // Drive carries a webhookUrl (changes.watch push); Sheets/Docs are poll-only
+    // (scopes but no ingress).
+    const drive = google.resources.find((r) => r.resource === "drive")!;
+    expect(drive.webhookUrl).toBe("https://connect.test/ingress/google/drive");
+    expect(drive.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/drive"]);
+    const sheets = google.resources.find((r) => r.resource === "sheets")!;
+    expect(sheets.webhookUrl).toBeUndefined();
+    expect(sheets.pubsubTopic).toBeUndefined();
+    expect(sheets.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/spreadsheets"]);
+    const docs = google.resources.find((r) => r.resource === "docs")!;
+    expect(docs.webhookUrl).toBeUndefined();
+    expect(docs.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/documents"]);
   });
 
   it("GET /credentials/google returns the OAuth client id + secret", async () => {

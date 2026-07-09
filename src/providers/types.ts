@@ -7,7 +7,14 @@ import type { KeyResolver } from "../auth/jwks.ts";
  * the Durable Object.
  */
 export type ProviderId = "google" | "atlassian";
-export type ResourceId = "gmail" | "calendar" | "jira" | "confluence"; // future: "drive"
+export type ResourceId =
+  | "gmail"
+  | "calendar"
+  | "drive"
+  | "sheets"
+  | "docs"
+  | "jira"
+  | "confluence";
 
 /** The normalized result of verifying + parsing one inbound provider push. */
 export interface Notification {
@@ -62,7 +69,7 @@ export interface ResourceDiscovery {
   scopes: string[];
   /** Gmail: the org Pub/Sub topic the client passes to users.watch(). */
   pubsubTopic?: string;
-  /** Calendar: the webhook URL the client passes to events.watch().address. */
+  /** Calendar/Drive: the webhook URL the client passes to *.watch().address. */
   webhookUrl?: string;
 }
 

@@ -32,7 +32,9 @@ export interface Config {
   sessionTtlSeconds: number;
   nonceWindowSeconds: number;
   calendar: {
-    /** When true, the Calendar channel token must equal HMAC(hmacKey, channelId). */
+    /** When true, the webhook channel token must equal HMAC(hmacKey, channelId).
+     *  Governs BOTH Google web_hook ingresses (Calendar and Drive) — they share
+     *  the same channel-token mechanism, so one knob configures both. */
     requireHmac: boolean;
     /** Secret for the optional HMAC channel-token check (server-side only). */
     hmacKey?: string;
@@ -61,6 +63,9 @@ export function readConfig(env: Env): Config {
       resourceScopes: {
         gmail: (env.GOOGLE_SCOPES_GMAIL ?? "").split(/\s+/).filter(Boolean),
         calendar: (env.GOOGLE_SCOPES_CALENDAR ?? "").split(/\s+/).filter(Boolean),
+        drive: (env.GOOGLE_SCOPES_DRIVE ?? "").split(/\s+/).filter(Boolean),
+        sheets: (env.GOOGLE_SCOPES_SHEETS ?? "").split(/\s+/).filter(Boolean),
+        docs: (env.GOOGLE_SCOPES_DOCS ?? "").split(/\s+/).filter(Boolean),
       },
       gmailPubsubTopic: env.GMAIL_PUBSUB_TOPIC ?? "",
       pubsubAudience: env.PUBSUB_AUDIENCE ?? "",

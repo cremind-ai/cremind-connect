@@ -1,22 +1,24 @@
 import { base32Encode } from "../lib/base32.ts";
 
 /**
- * Google Calendar watch channel ids encode the routing key so the relay can route
- * an inbound webhook to the right Durable Object hub WITHOUT any stored mapping.
+ * Google web_hook watch channel ids (Calendar events.watch AND Drive
+ * changes.watch) encode the routing key so the relay can route an inbound webhook
+ * to the right Durable Object hub WITHOUT any stored mapping. The format is
+ * resource-agnostic — the same parser serves both Calendar and Drive ingress.
  *
  * Format:  cm-<routingKey>-<nonce>
  *   - "cm"        : fixed namespace tag (cremind)
  *   - routingKey  : 26-char base32 (from accountKeyFor)
  *   - nonce       : random per-channel suffix so re-watches get a fresh channel id
  *
- * Separators are "-" (NOT "."): Google Calendar restricts channel ids to
- * [A-Za-z0-9-_+/=], so a dot is rejected at events.watch() with channelIdInvalid.
+ * Separators are "-" (NOT "."): Google restricts channel ids to
+ * [A-Za-z0-9-_+/=], so a dot is rejected at *.watch() with channelIdInvalid.
  *
  * Length budget: 3 ("cm-") + 26 + 1 ("-") + nonce. Google caps channel id at 64
  * chars, so the nonce can be up to 34 chars; we use 16.
  *
  * The client (cremind skill) builds the channel id with this exact format when it
- * calls events.watch(); the relay parses it from the X-Goog-Channel-ID header.
+ * calls *.watch(); the relay parses it from the X-Goog-Channel-ID header.
  */
 const PREFIX = "cm";
 const NONCE_LEN = 16;
