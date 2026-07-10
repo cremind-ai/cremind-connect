@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
 };
 
-const EFFECTIVE_DATE = "July 5, 2026";
+const EFFECTIVE_DATE = "July 10, 2026";
 
 export default function PrivacyPage() {
   return (
@@ -84,9 +84,9 @@ export default function PrivacyPage() {
           </p>
           <ul>
             <li>
-              <strong>Gmail</strong> (<code>gmail.modify</code>,{" "}
-              <code>gmail.send</code>) — read, search, label, and trash messages,
-              and send the emails and replies you compose or approve.
+              <strong>Gmail</strong> (<code>gmail.readonly</code>,{" "}
+              <code>gmail.send</code>) — read and search your messages, and send
+              the emails and replies you compose or approve.
             </li>
             <li>
               <strong>Calendar</strong> (<code>calendar.events</code>) — create,
@@ -128,7 +128,64 @@ export default function PrivacyPage() {
             or to comply with applicable law.
           </p>
 
-          <h2>3. The relay service — what it does not do</h2>
+          <h2>3. How we protect your data</h2>
+          <p>
+            Because Cremind is self-hosted and the relay is token-less, the most
+            important protection is architectural: your Google data stays on your
+            own machine and is never stored on Cremind&rsquo;s servers. In
+            addition, we apply the following data-protection measures:
+          </p>
+          <ul>
+            <li>
+              <strong>Encryption in transit.</strong> All communication with
+              Google&rsquo;s APIs and with the Cremind Connect relay is encrypted
+              using TLS (HTTPS and secure WebSockets); your data and tokens are
+              never sent over plaintext connections.
+            </li>
+            <li>
+              <strong>On-device storage &amp; access control.</strong> Your OAuth
+              tokens and any Google content the app fetches are stored only on
+              your own device, under your operating-system user account and its
+              file permissions. They are not uploaded to, or accessible by,
+              Cremind.
+            </li>
+            <li>
+              <strong>Data minimization.</strong> The Cremind Connect relay stores
+              no OAuth tokens and none of the contents of your email, calendar,
+              Drive files, or documents — only transient, content-free resync
+              nudges routed by a one-way hash (see the relay sections below). This
+              sharply limits what could ever be exposed.
+            </li>
+            <li>
+              <strong>Encrypted backups.</strong> If you export a Cremind backup,
+              you can protect it with a passphrase; encrypted archives use
+              AES-256-GCM with a key derived via scrypt, so the tokens and other
+              secrets inside are unreadable without your passphrase.
+            </li>
+            <li>
+              <strong>Secret management &amp; scrubbed logs.</strong> Server-side
+              secrets (such as the relay&rsquo;s signing keys) are held as managed
+              platform secrets and are never committed to source control.
+              Operational logs are scrubbed of email addresses and tokens (see
+              &ldquo;Logs&rdquo; below).
+            </li>
+            <li>
+              <strong>Revocation &amp; deletion.</strong> You can disconnect a
+              Google account in the app at any time, which deletes the stored
+              tokens from your machine, and revoke Cremind&rsquo;s access entirely
+              at{" "}
+              <a
+                href="https://myaccount.google.com/permissions"
+                target="_blank"
+                rel="noreferrer"
+              >
+                myaccount.google.com/permissions
+              </a>
+              .
+            </li>
+          </ul>
+
+          <h2>4. The relay service — what it does not do</h2>
           <ul>
             <li>
               It does <strong>not</strong> store your OAuth access or refresh
@@ -145,7 +202,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2>4. The relay service — what it does handle</h2>
+          <h2>5. The relay service — what it does handle</h2>
           <ul>
             <li>
               <strong>Verifying provider push notifications.</strong> When Google
@@ -178,7 +235,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2>5. Data at rest</h2>
+          <h2>6. Data at rest</h2>
           <p>
             The service is stateless at rest. The only persisted data is in a
             temporary key-value cache holding (i) Google&rsquo;s{" "}
@@ -188,7 +245,7 @@ export default function PrivacyPage() {
             connections are ephemeral and hold no durable state.
           </p>
 
-          <h2>6. Logs</h2>
+          <h2>7. Logs</h2>
           <p>
             Operational logs are deliberately scrubbed: email addresses, mailbox
             cursors, and all tokens are <strong>never</strong> logged. Only a
@@ -206,7 +263,7 @@ export default function PrivacyPage() {
             .
           </p>
 
-          <h2>7. This website</h2>
+          <h2>8. This website</h2>
           <p>
             This site is a static informational site. It uses{" "}
             <strong>Cloudflare Web Analytics</strong>, which is cookieless,
@@ -216,20 +273,20 @@ export default function PrivacyPage() {
             Cloudflare.
           </p>
 
-          <h2>8. Third parties</h2>
+          <h2>9. Third parties</h2>
           <p>
             The relay interacts with Google and Atlassian solely to verify pushes
             and (for Atlassian) exchange tokens. It shares no data with any other
             third party and does not sell data.
           </p>
 
-          <h2>9. Children</h2>
+          <h2>10. Children</h2>
           <p>
             Cremind Connect is not directed to children under 13, and we do not
             knowingly collect personal information from them.
           </p>
 
-          <h2>10. Your choices</h2>
+          <h2>11. Your choices</h2>
           <p>
             The service holds no account or stored personal data to access,
             export, or delete. To stop using it, unlink the integration in your
@@ -237,13 +294,13 @@ export default function PrivacyPage() {
             Atlassian account settings.
           </p>
 
-          <h2>11. Changes</h2>
+          <h2>12. Changes</h2>
           <p>
             We may update this policy. Material changes will be reflected by a new
             effective date on this page and in the public repository.
           </p>
 
-          <h2>12. Contact</h2>
+          <h2>13. Contact</h2>
           <p>
             Questions about this policy? Email{" "}
             <a href={`mailto:${siteConfig.contactEmail}`}>

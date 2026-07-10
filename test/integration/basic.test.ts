@@ -30,7 +30,7 @@ describe("basic routes", () => {
     expect(gmail.scopes).toEqual([
       "openid",
       "email",
-      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
       "https://www.googleapis.com/auth/gmail.send",
     ]);
     const cal = google.resources.find((r) => r.resource === "calendar")!;

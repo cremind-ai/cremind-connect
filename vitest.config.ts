@@ -20,7 +20,7 @@ export default defineWorkersConfig({
             GOOGLE_CLIENT_ID: "test-client.apps.googleusercontent.com",
             GOOGLE_CLIENT_SECRET: "test-secret-do-not-use",
             GOOGLE_SCOPES_GMAIL:
-              "openid email https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send",
+              "openid email https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send",
             GOOGLE_SCOPES_CALENDAR: "openid email https://www.googleapis.com/auth/calendar.events",
             GOOGLE_SCOPES_DRIVE: "openid email https://www.googleapis.com/auth/drive",
             GOOGLE_SCOPES_SHEETS: "openid email https://www.googleapis.com/auth/spreadsheets",

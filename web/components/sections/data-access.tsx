@@ -1,4 +1,12 @@
-import { AtSign, ShieldCheck, UserRound } from "lucide-react";
+import {
+  AtSign,
+  CalendarDays,
+  FileText,
+  HardDrive,
+  Mail,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
@@ -11,10 +19,8 @@ import {
 
 // The Google data the Cremind app requests through the OAuth consent screen.
 // IMPORTANT: keep this list matched to the live consent screen's "Data access
-// summary" before submitting for verification. Today that summary shows only
-// userinfo.profile — remove the "Email & sign-in" card below if your consent
-// screen does not also list userinfo.email. When the Gmail/Calendar scopes are
-// added later, add matching cards here (and the parallel section in /privacy).
+// summary" and the parallel scope section in /privacy before submitting for
+// verification.
 const scopes = [
   {
     icon: UserRound,
@@ -28,6 +34,30 @@ const scopes = [
     scope: "openid · userinfo.email",
     body: "Identifies the account you linked and derives the one-way routing key that delivers real-time events to your session. Your email is never stored by Cremind Connect.",
   },
+  {
+    icon: Mail,
+    name: "Gmail — read & send",
+    scope: "gmail.readonly · gmail.send",
+    body: "Read and search your messages, and send the emails and replies you compose or approve. Accessed only on your own device, at your request.",
+  },
+  {
+    icon: CalendarDays,
+    name: "Calendar events",
+    scope: "calendar.events",
+    body: "Create, view, update, and delete your own calendar events for the scheduling features you enable.",
+  },
+  {
+    icon: HardDrive,
+    name: "Drive files",
+    scope: "drive",
+    body: "Search, read/download, upload, and organize the Drive files you point Cremind to — including files you reference by link.",
+  },
+  {
+    icon: FileText,
+    name: "Docs & Sheets",
+    scope: "documents · spreadsheets",
+    body: "Create and read/edit the Google Docs and Sheets you name, so Cremind can work with your existing content.",
+  },
 ];
 
 export function DataAccess() {
@@ -39,8 +69,8 @@ export function DataAccess() {
             The Google data Cremind asks for — and why
           </h2>
           <p className="mt-4 text-lg text-muted-foreground text-pretty">
-            When you connect a Google account, Cremind requests only what it needs
-            to identify the account you linked. Here is every piece of Google data
+            When you connect a Google account, Cremind requests only the scopes
+            needed for the features you enable. Here is every piece of Google data
             it asks for, and the reason.
           </p>
         </div>
