@@ -145,7 +145,8 @@ infrastructure.
 - Durable Objects require a paid Workers plan.
 - A single DO holds up to 32,768 WebSockets; sharding (`idFromName(key+":"+i)`) is
   a future option, dormant by default (implausible for a personal-app product).
-- `gmail.modify`/`gmail.send` are **restricted** scopes: development uses the
+- `gmail.readonly` (restricted) + `gmail.send` (sensitive): development uses the
   consent screen in "Testing" mode (≤100 test users, no CASA); public launch
-  requires Google verification + an annual CASA assessment regardless of this
-  token-less design (the *client* still requests the scopes).
+  requires Google verification. A CASA assessment applies only when restricted-
+  scope data is stored/transmitted on a server we operate — which the token-less,
+  self-hosted design avoids (see SETUP-GCP.md), so we assert the exemption.

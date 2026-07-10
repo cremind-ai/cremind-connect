@@ -29,17 +29,21 @@ gcloud services enable \
 4. Add scopes (Console-only — the OAuth consent screen has **no** gcloud/API
    surface, so this step must be done in the web Console):
    - `openid`, `.../auth/userinfo.email`
-   - `https://www.googleapis.com/auth/gmail.modify`
+   - `https://www.googleapis.com/auth/gmail.readonly`
    - `https://www.googleapis.com/auth/gmail.send`
    - `https://www.googleapis.com/auth/calendar.events`
    - `https://www.googleapis.com/auth/drive`
    - `https://www.googleapis.com/auth/spreadsheets`
    - `https://www.googleapis.com/auth/documents`
 
-> Going **public** later requires Google verification + an annual CASA security
-> assessment (because the client requests restricted `gmail.modify` and `drive`
-> scopes). The token-less relay reduces blast radius but does not waive this.
-> `spreadsheets` and `documents` are *sensitive* (verification, no CASA).
+> Going **public** requires Google verification. The client requests restricted
+> scopes (`gmail.readonly` and full `drive`), so a CASA security assessment would
+> normally apply — but it is required only when restricted-scope data is stored
+> or transmitted on **your servers**. Cremind is self-hosted and the relay is
+> never in the Google token path, so no restricted-scope data touches a server we
+> operate; we assert this exemption during verification. `gmail.send`,
+> `spreadsheets`, and `documents` are *sensitive* (verification, no CASA). If a
+> hosted offering is ever added, CASA would apply.
 
 ## 2. Desktop OAuth client
 
