@@ -3,12 +3,18 @@ import type { Provider, ProviderDiscovery } from "../types.ts";
 
 /**
  * Static metadata for the Google provider, used to build the discovery document
- * that lets a cremind skill self-configure (which client id, scopes, Pub/Sub
- * topic and webhook URLs to use).
+ * that lets a cremind skill self-configure (which client id, scopes and webhook
+ * URLs to use).
+ *
+ * Gmail is execution-only (`gmail.send`): the shared OAuth client requests no
+ * restricted scope, so it can neither read a mailbox nor call users.watch(). Email
+ * reading and live mailbox events run over IMAP inside the app instead, which is
+ * why gmail carries scopes but no ingress of any kind.
  *
  * Sheets and Docs are poll-only (Google has no push API for their content), so
  * they register scopes but NO ingress — file-level changes to those documents
- * surface via the Drive resource's changes.watch feed.
+ * surface via the Drive resource's changes.watch feed, which under `drive.file`
+ * reports only the files the user granted.
  */
 export class GoogleProvider implements Provider {
   readonly id = "google" as const;
@@ -18,10 +24,13 @@ export class GoogleProvider implements Provider {
       provider: "google",
       authClientId: config.google.clientId,
       resources: [
+        // gmail stays a discovery resource so new links keep self-configuring their
+        // send scope, and so an already-installed mailbox listener — which reads a
+        // Pub/Sub topic out of this entry and throws when it is absent — fails fast
+        // and clean instead of grinding 403s against users.watch().
         {
           resource: "gmail",
           scopes: config.google.resourceScopes.gmail ?? [],
-          pubsubTopic: config.google.gmailPubsubTopic,
         },
         {
           resource: "calendar",

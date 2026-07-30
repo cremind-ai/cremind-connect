@@ -14,7 +14,7 @@ const steps = [
     n: "01",
     icon: ShieldCheck,
     title: "Verify",
-    body: "A provider — Gmail via Pub/Sub, Calendar, Drive, or Jira via webhook — pushes a notification to Cremind Connect, which cryptographically verifies it really came from the provider.",
+    body: "A provider — Calendar, Drive, or Jira via webhook — pushes a notification to Cremind Connect, which cryptographically verifies it really came from the provider.",
   },
   {
     n: "02",
@@ -78,7 +78,7 @@ export function HowItWorks() {
           <pre className="overflow-x-auto rounded-xl bg-neutral-950 p-5 text-sm leading-relaxed text-neutral-100 ring-1 ring-white/10">
             <code>{`{
   "type": "resync",
-  "source": "gmail",
+  "source": "calendar",
   "ts": 1717939200
 }`}</code>
           </pre>

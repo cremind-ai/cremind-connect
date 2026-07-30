@@ -1,18 +1,13 @@
-import { Globe, RadioTower, ShieldCheck } from "lucide-react";
+import { Globe, ShieldCheck } from "lucide-react";
 
 import { Container } from "@/components/container";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const pieces = [
   {
-    icon: RadioTower,
-    title: "A Pub/Sub topic",
-    body: "Gmail push is delivered to a Google Cloud Pub/Sub topic that has to be owned and verified by an organization.",
-  },
-  {
     icon: Globe,
     title: "A verified webhook domain",
-    body: "Google Calendar and Drive push require a verified HTTPS domain to receive change notifications — not something an individual registers ad hoc.",
+    body: "Google Calendar and Drive only deliver change notifications — even for the individual files you grant — to a verified HTTPS domain, not something an individual registers ad hoc.",
   },
   {
     icon: ShieldCheck,
@@ -35,7 +30,7 @@ export function WhyItExists() {
             Cremind Connect owns exactly those shared pieces — and nothing else.
           </p>
         </div>
-        <div className="mx-auto mt-12 grid max-w-5xl gap-4 md:grid-cols-3">
+        <div className="mx-auto mt-12 grid max-w-3xl gap-4 md:grid-cols-2">
           {pieces.map(({ icon: Icon, title, body }) => (
             <Card key={title}>
               <CardHeader>

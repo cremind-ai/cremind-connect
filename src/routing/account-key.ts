@@ -22,8 +22,8 @@ export type Provider = "google" | "atlassian";
  * We lowercase and trim only. We deliberately do NOT collapse Gmail dots/`+suffix`:
  * that rule is Gmail-consumer-specific and applying it to Google Workspace domains
  * would merge distinct accounts. The relay always derives the key from a
- * Google-verified `email` claim or the Gmail Pub/Sub `emailAddress`, so the input
- * is already the canonical account address.
+ * provider-verified `email` claim, so the input is already the canonical account
+ * address.
  */
 export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();

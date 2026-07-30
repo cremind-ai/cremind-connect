@@ -22,9 +22,10 @@ export function WhatIs() {
               is an open-source, self-hosted personal AI assistant that runs on
               your own machine. Cremind Connect is its companion relay: it owns
               the small amount of cloud infrastructure that Google and Atlassian
-              require for real-time push, so your local assistant can react to new
-              email, calendar and Drive changes, and Jira updates the moment they
-              happen.
+              require for real-time push, so your local assistant can react the
+              moment your calendar shifts, a Drive file you granted it changes, or a
+              Jira issue moves. New mail reaches it over IMAP, straight from your
+              mail provider.
             </p>
             <p>
               It is the backend that powers Cremind&rsquo;s Google and Atlassian{" "}

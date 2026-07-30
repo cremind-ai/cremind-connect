@@ -9,7 +9,7 @@ import { hubStub } from "../durable/client.ts";
 import { HttpError, httpErrorResponse } from "../lib/errors.ts";
 
 /**
- * GET /subscribe?account=<routingKey>&resources=gmail,calendar
+ * GET /subscribe?account=<routingKey>&resources=calendar,drive
  *
  * Two auth paths:
  *  - Reconnect: header `X-Cremind-Session: <relay-session JWT>` (cheap, no Google round trip).

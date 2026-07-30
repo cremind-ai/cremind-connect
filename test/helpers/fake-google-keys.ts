@@ -70,26 +70,3 @@ export function googleIdPayload(
     ...over,
   };
 }
-
-/** Convenience: a valid Pub/Sub push OIDC payload with overridable claims. */
-export function pubsubOidcPayload(
-  over: Partial<{
-    aud: string;
-    email: string;
-    email_verified: boolean;
-    iss: string;
-    iat: number;
-    exp: number;
-  }> = {},
-): Record<string, unknown> {
-  const now = Math.floor(Date.now() / 1000);
-  return {
-    iss: "https://accounts.google.com",
-    aud: "https://connect.test/ingress/google/pubsub",
-    email: "push@test.iam.gserviceaccount.com",
-    email_verified: true,
-    iat: now,
-    exp: now + 3600,
-    ...over,
-  };
-}

@@ -25,22 +25,23 @@ describe("basic routes", () => {
     expect(google.authClientId).toBe("test-client.apps.googleusercontent.com");
     // Scopes are per-resource (least privilege) — no provider-level combined list.
     expect(google.scopes).toBeUndefined();
+    // Gmail is execution-only: send scope, and no event plane to advertise.
     const gmail = google.resources.find((r) => r.resource === "gmail")!;
-    expect(gmail.pubsubTopic).toBe("projects/test/topics/gmail-watch");
+    expect(gmail.pubsubTopic).toBeUndefined();
+    expect(gmail.webhookUrl).toBeUndefined();
     expect(gmail.scopes).toEqual([
       "openid",
       "email",
-      "https://www.googleapis.com/auth/gmail.readonly",
       "https://www.googleapis.com/auth/gmail.send",
     ]);
     const cal = google.resources.find((r) => r.resource === "calendar")!;
     expect(cal.webhookUrl).toBe("https://connect.test/ingress/google/calendar");
     expect(cal.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/calendar.events"]);
-    // Drive carries a webhookUrl (changes.watch push); Sheets/Docs are poll-only
-    // (scopes but no ingress).
+    // Drive carries a webhookUrl (changes.watch push, limited to granted files under
+    // drive.file); Sheets/Docs are poll-only (scopes but no ingress).
     const drive = google.resources.find((r) => r.resource === "drive")!;
     expect(drive.webhookUrl).toBe("https://connect.test/ingress/google/drive");
-    expect(drive.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/drive"]);
+    expect(drive.scopes).toEqual(["openid", "email", "https://www.googleapis.com/auth/drive.file"]);
     const sheets = google.resources.find((r) => r.resource === "sheets")!;
     expect(sheets.webhookUrl).toBeUndefined();
     expect(sheets.pubsubTopic).toBeUndefined();

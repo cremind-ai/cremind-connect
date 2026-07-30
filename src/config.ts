@@ -15,11 +15,6 @@ export interface Config {
     clientSecret: string;
     /** Per-resource OAuth scopes; each skill requests only its own (least privilege). */
     resourceScopes: Partial<Record<ResourceId, string[]>>;
-    gmailPubsubTopic: string;
-    /** Expected `aud` claim on the Pub/Sub push OIDC JWT. */
-    pubsubAudience: string;
-    /** Expected `email` claim (the push subscription's service account). */
-    pubsubServiceAccount: string;
   };
   atlassian: {
     /** The shared Atlassian OAuth 2.0 (3LO) app client id (public; in the discovery doc). */
@@ -67,9 +62,6 @@ export function readConfig(env: Env): Config {
         sheets: (env.GOOGLE_SCOPES_SHEETS ?? "").split(/\s+/).filter(Boolean),
         docs: (env.GOOGLE_SCOPES_DOCS ?? "").split(/\s+/).filter(Boolean),
       },
-      gmailPubsubTopic: env.GMAIL_PUBSUB_TOPIC ?? "",
-      pubsubAudience: env.PUBSUB_AUDIENCE ?? "",
-      pubsubServiceAccount: env.PUBSUB_SA_EMAIL ?? "",
     },
     atlassian: {
       clientId: env.ATLASSIAN_CLIENT_ID ?? "",

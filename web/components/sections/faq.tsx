@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     q: "Do I have to run any cloud infrastructure?",
-    a: "No. You click an OAuth consent screen in your browser. Cremind Connect owns the organization-level infrastructure — the Pub/Sub topic, webhook domain, and OAuth app — on your behalf.",
+    a: "No. You click an OAuth consent screen in your browser. Cremind Connect owns the organization-level infrastructure — the verified webhook domain and the OAuth app — on your behalf.",
   },
   {
     q: "Is it free?",

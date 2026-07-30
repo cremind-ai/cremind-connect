@@ -5,7 +5,6 @@ import {
   HardDrive,
   Mail,
   ShieldCheck,
-  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -18,16 +17,12 @@ import {
 } from "@/components/ui/card";
 
 // The Google data the Cremind app requests through the OAuth consent screen.
-// IMPORTANT: keep this list matched to the live consent screen's "Data access
-// summary" and the parallel scope section in /privacy before submitting for
-// verification.
+// IMPORTANT: this is a public disclosure — it must list exactly the scopes the
+// live consent screen requests, no more and no less. Claiming access the app does
+// not have is a verification and legal problem, so keep this list, the parallel
+// scope section in /privacy, and the GOOGLE_SCOPES_* vars in wrangler.jsonc in
+// lockstep. Every scope here is sensitive; none is restricted.
 const scopes = [
-  {
-    icon: UserRound,
-    name: "Basic profile — name & profile picture",
-    scope: "userinfo.profile",
-    body: "Shown so you can confirm which Google account you connected, and to label that account inside the Cremind app.",
-  },
   {
     icon: AtSign,
     name: "Email address & sign-in",
@@ -36,9 +31,9 @@ const scopes = [
   },
   {
     icon: Mail,
-    name: "Gmail — read & send",
-    scope: "gmail.readonly · gmail.send",
-    body: "Read and search your messages, and send the emails and replies you compose or approve. Accessed only on your own device, at your request.",
+    name: "Gmail — send only",
+    scope: "gmail.send",
+    body: "Sends the emails and replies you compose or approve. It cannot read your mailbox: this scope grants no access to your messages, drafts, labels, or search.",
   },
   {
     icon: CalendarDays,
@@ -48,9 +43,9 @@ const scopes = [
   },
   {
     icon: HardDrive,
-    name: "Drive files",
-    scope: "drive",
-    body: "Search, read/download, upload, and organize the Drive files you point Cremind to — including files you reference by link.",
+    name: "Drive — per file",
+    scope: "drive.file",
+    body: "Reaches only individual files you hand it: the ones you choose in Google's own file picker, plus files Cremind creates for you. The rest of your Drive stays invisible to it.",
   },
   {
     icon: FileText,
