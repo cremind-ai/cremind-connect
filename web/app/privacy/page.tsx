@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
 };
 
-const EFFECTIVE_DATE = "July 10, 2026";
+const EFFECTIVE_DATE = "July 30, 2026";
 
 export default function PrivacyPage() {
   return (
@@ -65,12 +65,6 @@ export default function PrivacyPage() {
           </p>
           <ul>
             <li>
-              <code>userinfo.profile</code> — your{" "}
-              <strong>basic profile</strong> (name, profile picture). Used to
-              confirm which Google account you connected and to label that account
-              inside the app.
-            </li>
-            <li>
               <code>openid</code>, <code>userinfo.email</code> — your{" "}
               <strong>email and sign-in identity</strong>. Used to identify the
               account you linked and to derive the one-way routing key that
@@ -84,18 +78,24 @@ export default function PrivacyPage() {
           </p>
           <ul>
             <li>
-              <strong>Gmail</strong> (<code>gmail.readonly</code>,{" "}
-              <code>gmail.send</code>) — read and search your messages, and send
-              the emails and replies you compose or approve.
+              <strong>Gmail</strong> (<code>gmail.send</code>) —{" "}
+              <strong>send only</strong>. The app can send the emails and replies
+              you compose or approve; it <strong>cannot read your mailbox</strong>,
+              and this scope grants it no access to your messages, drafts, labels,
+              or search. If you enable email reading in Cremind, it connects to your
+              mail provider over IMAP with credentials you supply yourself — outside
+              this Google authorization.
             </li>
             <li>
               <strong>Calendar</strong> (<code>calendar.events</code>) — create,
               view, update, and delete your own calendar events.
             </li>
             <li>
-              <strong>Drive</strong> (<code>drive</code>) — search, read/download,
-              upload, and organize (move, rename, folder, trash/restore) your
-              files.
+              <strong>Drive</strong> (<code>drive.file</code>) —{" "}
+              <strong>per file</strong>. The app can only open, edit, and organize
+              individual files you hand it: the ones you select in Google&rsquo;s own
+              file picker, plus files Cremind creates for you. It cannot browse or
+              search the rest of your Drive.
             </li>
             <li>
               <strong>Docs &amp; Sheets</strong> (<code>documents</code>,{" "}

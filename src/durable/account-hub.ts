@@ -152,10 +152,13 @@ export class AccountHub {
   }
 }
 
-// "drive" is included because the Drive listener subscribes to it. Sheets/docs
-// are intentionally absent: they are poll-only, have no ingress, and never
-// subscribe — listing them would permit subscriptions to nudges that can't fire.
-const VALID_RESOURCES: ResourceId[] = ["gmail", "calendar", "drive", "jira", "confluence"];
+// Only resources with a live ingress belong here — listing one without an ingress
+// would permit subscriptions to nudges that can never fire. Sheets/docs are
+// poll-only. "gmail" is retired: the shared OAuth client is send-only, so Gmail
+// has no event plane at all (mailbox events run over IMAP inside the app). A
+// legacy client still asking for it sanitizes down to no resources and idles
+// harmlessly until it is upgraded.
+const VALID_RESOURCES: ResourceId[] = ["calendar", "drive", "jira", "confluence"];
 
 function sanitizeResources(input: unknown): ResourceId[] {
   if (!Array.isArray(input)) return [];

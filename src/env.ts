@@ -26,9 +26,6 @@ export interface Env {
   GOOGLE_SCOPES_DRIVE: string;
   GOOGLE_SCOPES_SHEETS: string;
   GOOGLE_SCOPES_DOCS: string;
-  GMAIL_PUBSUB_TOPIC: string;
-  PUBSUB_AUDIENCE: string;
-  PUBSUB_SA_EMAIL: string;
   SESSION_TTL_SECONDS: string;
   NONCE_WINDOW_SECONDS: string;
   CALENDAR_REQUIRE_HMAC: string;

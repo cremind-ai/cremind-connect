@@ -53,7 +53,7 @@ export interface IngressContext {
  * - Return `null` for "accepted, nothing to broadcast" (handshake / duplicate).
  */
 export interface IngressAdapter {
-  readonly id: string; // e.g. "google/pubsub", "google/calendar"
+  readonly id: string; // e.g. "google/calendar", "atlassian/jira"
   handle(req: IngressRequest, ctx: IngressContext): Promise<Notification | null>;
 }
 
@@ -67,8 +67,6 @@ export interface ResourceDiscovery {
   resource: ResourceId;
   /** OAuth scopes the client skill for this resource must request (least privilege). */
   scopes: string[];
-  /** Gmail: the org Pub/Sub topic the client passes to users.watch(). */
-  pubsubTopic?: string;
   /** Calendar/Drive: the webhook URL the client passes to *.watch().address. */
   webhookUrl?: string;
 }

@@ -6,8 +6,8 @@ import { SUBPROTOCOL } from "../protocol/messages.ts";
 
 /**
  * Public discovery document. A cremind skill fetches this to self-configure:
- * which OAuth client id + scopes to use, which Pub/Sub topic to point
- * users.watch() at, which webhook URL for events.watch(), and the relay WS URL.
+ * which OAuth client id + scopes to use, which webhook URL to pass to *.watch(),
+ * and the relay WS URL.
  */
 export function discovery(c: Context<{ Bindings: Env }>): Response {
   const config = readConfig(c.env);

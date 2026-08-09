@@ -1,7 +1,7 @@
 /**
  * Low-level JWT helpers built on WebCrypto (available in Workers without
  * nodejs_compat). Supports:
- *   - RS256 verification (Google ID tokens and Pub/Sub OIDC push tokens)
+ *   - RS256 verification (Google ID tokens)
  *   - HS256 sign/verify (our own short-lived relay-session tokens)
  */
 

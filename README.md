@@ -1,9 +1,9 @@
 # cremind-connect
 
 A **token-less OAuth broker + event relay** for [Cremind](https://github.com/cremind-ai).
-It lets a user's local Cremind app link Google accounts (Gmail, Calendar, Drive, …) and
-receive live events — **without this service ever storing, or even seeing, an
-OAuth access or refresh token**.
+It lets a user's local Cremind app link Google accounts (Calendar, Drive, Sheets,
+Docs, plus send-only Gmail) and receive live Calendar/Drive events — **without this
+service ever storing, or even seeing, an OAuth access or refresh token**.
 
 It runs on Cloudflare Workers + Durable Objects and is deployed with Wrangler. It
 is intentionally small, public, and auditable: anyone can read this repo and the
@@ -13,9 +13,9 @@ and does not do (hold user data).
 ## Why it exists
 
 Google push notifications require infrastructure an end user can't self-provision:
-a **Pub/Sub topic** (Gmail) and a **webhook domain** (Calendar) owned by an
-organization, plus a verified **OAuth consent screen**. `cremind-connect` owns
-exactly those org-level pieces and nothing else.
+a **verified webhook domain** (Calendar, Drive) owned by an organization, plus a
+verified **OAuth consent screen**. `cremind-connect` owns exactly those org-level
+pieces and nothing else.
 
 ## The key idea: two planes
 
@@ -25,12 +25,12 @@ AUTHORIZATION PLANE  (this service is NOT in the token path)
   local app  ◀──── access + refresh + id_token ────────  tokens stored LOCALLY only
 
 EVENT PLANE  (this service is a token-less relay)
-  local app  ──users.watch()  → org Pub/Sub topic ─▶ Gmail ─┐ Pub/Sub push (OIDC JWT)
-  local app  ──events.watch() → org webhook URL ───▶ Calendar ─┐ webhook
-                                                       ▼        ▼
+  local app  ──events.watch()  → org webhook URL ──▶ Calendar ─┐ webhook
+  local app  ──changes.watch() → org webhook URL ──▶ Drive ────┐ webhook
+                                                        ▼        ▼
                                           ┌──────────────────────────────┐
                                           │   cremind-connect (Worker)    │
-                                          │  verify → hash(email)=key →   │
+                                          │  verify → key from channel →  │
                                           │  Durable Object AccountHub    │
                                           │  broadcasts {type:"resync"}   │
                                           └───────────┬──────────────────┘
@@ -38,7 +38,7 @@ EVENT PLANE  (this service is a token-less relay)
                        ┌──────────────────────────────┼───────────────────────┐
                        ▼                               ▼                        ▼
                    App A (abc@gmail)            App B (abc@gmail)         App C (xyz@gmail)
-                   each syncs locally with ITS OWN token (history.list / events.list)
+                   each syncs locally with ITS OWN token (events.list / changes.list)
 ```
 
 A notification for an account is fanned out to **every** app that proved control
@@ -70,10 +70,9 @@ Endpoints:
 
 | Route | Purpose |
 |---|---|
-| `GET /.well-known/cremind-connect` | Discovery doc (client id, scopes, topic, webhook URL, ws URL). |
+| `GET /.well-known/cremind-connect` | Discovery doc (client id, scopes, webhook URL, ws URL). |
 | `GET /credentials/google` | Public OAuth client id + secret (served so the org can rotate them). |
 | `GET /subscribe?account=<key>` | WebSocket; Google ID token (bootstrap) or relay-session (reconnect). |
-| `POST /ingress/google/pubsub` | Gmail Pub/Sub push receiver (verifies OIDC JWT). |
 | `POST /ingress/google/calendar` | Calendar webhook receiver. |
 | `POST /ingress/google/drive` | Drive changes.watch webhook receiver. |
 | `GET /healthz` | Liveness. |
@@ -84,7 +83,7 @@ Requires a paid Cloudflare Workers plan (Durable Objects). [SETUP.md](SETUP.md)
 covers the shared Cloudflare base (KV namespaces, relay signing key, custom domain
 `connect.cremind.io`, deploy); per-provider guides cover the rest:
 [SETUP-GCP.md](SETUP-GCP.md) (Google — consent screen, Desktop OAuth client,
-Pub/Sub via [`terraform/`](terraform/), Calendar domain verification) and
+API enablement via [`terraform/`](terraform/), Calendar/Drive domain verification) and
 [SETUP-ATLASSIAN.md](SETUP-ATLASSIAN.md) (Atlassian — OAuth 2.0 (3LO) app, scopes,
 callback URL).
 

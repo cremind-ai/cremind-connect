@@ -5,8 +5,9 @@ cremind-connect is a token-less OAuth broker + event relay. Setup has two layers
 1. **This guide (common):** stand up the Worker on Cloudflare — KV namespaces, the
    relay signing key, base vars, custom domain, deploy.
 2. **Per-provider guides:** enable each provider you need.
-   - **[SETUP-GCP.md](SETUP-GCP.md)** — Google (Gmail + Calendar): OAuth consent
-     screen, Desktop OAuth client, Pub/Sub, Calendar domain verification.
+   - **[SETUP-GCP.md](SETUP-GCP.md)** — Google (Calendar, Drive, Sheets, Docs,
+     send-only Gmail): OAuth consent screen, Desktop OAuth client,
+     Calendar/Drive domain verification.
    - **[SETUP-ATLASSIAN.md](SETUP-ATLASSIAN.md)** — Atlassian (Jira + Confluence):
      the OAuth 2.0 (3LO) app, scopes, callback URL.
 
