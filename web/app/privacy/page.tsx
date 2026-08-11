@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
 };
 
-const EFFECTIVE_DATE = "July 30, 2026";
+const EFFECTIVE_DATE = "August 11, 2026";
 
 export default function PrivacyPage() {
   return (
@@ -128,7 +128,45 @@ export default function PrivacyPage() {
             or to comply with applicable law.
           </p>
 
-          <h2>3. How we protect your data</h2>
+          <h2>3. AI models — what processes your data</h2>
+          <p>
+            Cremind is an AI assistant, so it is worth being explicit about which
+            AI model sees your data. Cremind is{" "}
+            <strong>self-hosted and runs on your own machine</strong>, and{" "}
+            <strong>you choose the model it uses</strong>:
+          </p>
+          <ul>
+            <li>
+              <strong>A model running locally on your own hardware</strong> (for
+              example via Ollama or vLLM). In this configuration your data never
+              leaves your machine at all.
+            </li>
+            <li>
+              <strong>A third-party AI provider that you configure with your own
+              API key</strong> (for example OpenAI, Anthropic, Google Gemini,
+              Groq, Mistral, DeepSeek, xAI or OpenRouter). In this configuration,
+              content you ask the assistant to process is sent to the provider{" "}
+              <strong>you</strong> selected, under <strong>your own</strong>{" "}
+              account, and is subject to that provider&rsquo;s terms. You control
+              this choice and can change or remove it at any time.
+            </li>
+          </ul>
+          <p>
+            Cremind operates <strong>no AI service of its own</strong>. We do not
+            host, proxy, or route your prompts or your Google data through any
+            Cremind server for AI processing — the connection is made directly
+            from your own installation to whichever model you configured.
+          </p>
+          <p>
+            <strong>
+              Google user data is never used to develop, improve, or train
+              generalized AI and/or machine-learning models
+            </strong>{" "}
+            — neither ours nor any third party&rsquo;s. Cremind uses Google user
+            data only to perform the action you asked for, in that moment.
+          </p>
+
+          <h2>4. How we protect your data</h2>
           <p>
             Because Cremind is self-hosted and the relay is token-less, the most
             important protection is architectural: your Google data stays on your
@@ -185,7 +223,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2>4. The relay service — what it does not do</h2>
+          <h2>5. The relay service — what it does not do</h2>
           <ul>
             <li>
               It does <strong>not</strong> store your OAuth access or refresh
@@ -202,7 +240,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2>5. The relay service — what it does handle</h2>
+          <h2>6. The relay service — what it does handle</h2>
           <ul>
             <li>
               <strong>Verifying provider push notifications.</strong> When Google
@@ -235,7 +273,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2>6. Data at rest</h2>
+          <h2>7. Data at rest</h2>
           <p>
             The service is stateless at rest. The only persisted data is in a
             temporary key-value cache holding (i) Google&rsquo;s{" "}
@@ -245,7 +283,7 @@ export default function PrivacyPage() {
             connections are ephemeral and hold no durable state.
           </p>
 
-          <h2>7. Logs</h2>
+          <h2>8. Logs</h2>
           <p>
             Operational logs are deliberately scrubbed: email addresses, mailbox
             cursors, and all tokens are <strong>never</strong> logged. Only a
@@ -263,7 +301,7 @@ export default function PrivacyPage() {
             .
           </p>
 
-          <h2>8. This website</h2>
+          <h2>9. This website</h2>
           <p>
             This site is a static informational site. It uses{" "}
             <strong>Cloudflare Web Analytics</strong>, which is cookieless,
@@ -273,20 +311,20 @@ export default function PrivacyPage() {
             Cloudflare.
           </p>
 
-          <h2>9. Third parties</h2>
+          <h2>10. Third parties</h2>
           <p>
             The relay interacts with Google and Atlassian solely to verify pushes
             and (for Atlassian) exchange tokens. It shares no data with any other
             third party and does not sell data.
           </p>
 
-          <h2>10. Children</h2>
+          <h2>11. Children</h2>
           <p>
             Cremind Connect is not directed to children under 13, and we do not
             knowingly collect personal information from them.
           </p>
 
-          <h2>11. Your choices</h2>
+          <h2>12. Your choices</h2>
           <p>
             The service holds no account or stored personal data to access,
             export, or delete. To stop using it, unlink the integration in your
@@ -294,13 +332,13 @@ export default function PrivacyPage() {
             Atlassian account settings.
           </p>
 
-          <h2>12. Changes</h2>
+          <h2>13. Changes</h2>
           <p>
             We may update this policy. Material changes will be reflected by a new
             effective date on this page and in the public repository.
           </p>
 
-          <h2>13. Contact</h2>
+          <h2>14. Contact</h2>
           <p>
             Questions about this policy? Email{" "}
             <a href={`mailto:${siteConfig.contactEmail}`}>
